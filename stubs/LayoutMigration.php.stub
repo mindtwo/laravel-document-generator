@@ -1,0 +1,20 @@
+<?php
+
+use App\Models\{Model};
+use Illuminate\Database\Migrations\Migration;
+use mindtwo\DocumentGenerator\Database\LayoutBlueprint;
+use mindtwo\DocumentGenerator\Block\SectionBlock;
+use mindtwo\DocumentGenerator\Block\BladeBlock;
+
+return new class extends Migration {
+    public function up()
+    {
+        $layout = new LayoutBlueprint('{Name}', {Model}::class);
+
+        // TODO add your document blocks
+
+        // $layout->addBlock('Hello world', SectionBlock::class);
+
+        $layout->upsert();
+    }
+};

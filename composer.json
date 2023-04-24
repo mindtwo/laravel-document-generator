@@ -1,0 +1,45 @@
+{
+    "name": "mindtwo/laravel-document-generator",
+    "type": "proprietary",
+    "description": "A project to define and generate documents.",
+    "license": "MIT",
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
+    "authors": [
+        {
+            "name": "mindtwo GmbH",
+            "email": "info@mindtwo.de",
+            "homepage": "https://mindtwo.de"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "mindtwo/laravel-auto-create-uuid": "^2.5",
+        "dompdf/dompdf": "^2.0.3",
+        "ramsey/uuid": "^4.3.1",
+        "laravel/framework": "^9.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "mindtwo\\DocumentGenerator\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "mindtwo\\DocumentGenerator\\Providers\\DocumentGeneratorProvider"
+            ],
+            "aliases": {}
+        }
+    }
+}

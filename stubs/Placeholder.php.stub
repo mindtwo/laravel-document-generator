@@ -1,0 +1,17 @@
+<?php
+
+namespace App\{Path};
+
+use Illuminate\Database\Eloquent\Model;
+use mindtwo\DocumentGenerator\Document\Placeholder;
+use mindtwo\DocumentGenerator\Document\Document;
+use mindtwo\DocumentGenerator\Enums\ResolveContext;
+
+class {Name} extends Placeholder
+{
+    public function resolve(Model $model, ResolveContext $context, ?Document $document): string
+    {
+        // TODO resolve your value
+        return '';
+    }
+}
