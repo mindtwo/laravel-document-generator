@@ -39,7 +39,7 @@ class DocumentGenerator
         $fields = collect([]);
 
         foreach ($document->documentBlocks() as $docBlock) {
-            $block = $docBlock->blockType::from($docBlock);
+            $block = $docBlock->block_type::from($docBlock);
 
             $renderedBlock = $this->blockRenderer->renderBlock($block, $model, $document->getDocumentOrientation());
 
@@ -52,8 +52,8 @@ class DocumentGenerator
 
         $contentHash = $this->generateContentHash($document, $fields, $content);
 
-        if (GeneratedDocument::where('contentHash', $contentHash)->exists()) {
-            return GeneratedDocument::where('contentHash', $contentHash)->first();
+        if (GeneratedDocument::where('content_hash', $contentHash)->exists()) {
+            return GeneratedDocument::where('content_hash', $contentHash)->first();
         }
 
         $document->loadLayout();
@@ -111,8 +111,8 @@ class DocumentGenerator
 
         $filePath = str_replace("/$fileName", '', $fullpath);
 
-        $generatedDocument->fileName = $fileName;
-        $generatedDocument->filePath = $filePath;
+        $generatedDocument->file_name = $fileName;
+        $generatedDocument->file_path = $filePath;
 
         if (! $temporary) {
             $diskName = config('documents.files.disk') ?? 'local';

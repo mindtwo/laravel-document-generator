@@ -23,7 +23,7 @@ class UpdateBlockAction
             'name' => $data->get('name'),
         ])->first();
 
-        $block = $documentBlock->blockType::from($documentBlock);
+        $block = $documentBlock->block_type::from($documentBlock);
 
         if ($block->hasEditor()) {
             $data->put('template', $block->prepareTemplate($data->get('content')));

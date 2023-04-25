@@ -11,21 +11,15 @@ class CreateDocumentBlocksTable extends Migration
     {
         Schema::create('document_blocks', function (Blueprint $table): void {
             $table->id();
-
-            $table->foreignIdFor(DocumentLayout::class);
-
-            $table->string('blockType');
-
-            $table->string('name');
-
+            $document_layout_id = $table->foreignIdFor(DocumentLayout::class)->index();
+            $block_type = $table->string('block_type');
+            $name = $table->string('name');
             $table->unsignedInteger('position');
             $table->boolean('show');
-
             $table->text('template');
-
             $table->timestamps();
-
-            $table->unique(['document_layout_id', 'blockType', 'name']);
+            $table->index([$block_type->name, $document_layout_id->name]);
+            $table->index([$block_type->name, $name->name, $document_layout_id->name]);
         });
     }
 

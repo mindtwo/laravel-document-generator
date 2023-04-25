@@ -48,7 +48,7 @@ class BlockTemplateResolver
      */
     public function resolve(DocumentBlock $documentBlock): Block
     {
-        return $documentBlock->blockType::from($documentBlock);
+        return $documentBlock->block_type::from($documentBlock);
     }
 
     /**

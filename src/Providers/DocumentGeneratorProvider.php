@@ -48,12 +48,6 @@ class DocumentGeneratorProvider extends ServiceProvider
                 ], 'migrations');
             }
 
-            if (! class_exists('ChangeDocumentLayoutsPolymorphTable')) {
-                $this->publishes([
-                    __DIR__.'/../../database/migrations/change_document_layouts_polymorph_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_change_document_layouts_polymorph_table.php'),
-                ], 'migrations');
-            }
-
             $this->commands([
                 MakePlaceholderCommand::class,
                 MakeLayoutMigrationCommand::class,

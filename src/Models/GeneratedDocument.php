@@ -25,8 +25,6 @@ use mindtwo\LaravelAutoCreateUuid\AutoCreateUuid;
  * @property string  $fullpath
  * @property bool  $saved_to_disk
  * @property bool $saved_to_db
- *
- * @method Filesystem diskInstance()
  */
 class GeneratedDocument extends Model
 {
@@ -80,7 +78,7 @@ class GeneratedDocument extends Model
     public function fullpath(): Attribute
     {
         return Attribute::make(
-            get: fn () => "{$this->filePath}/{$this->fileName}"
+            get: fn () => "{$this->filePath}/{$this->file_name}"
         );
     }
 

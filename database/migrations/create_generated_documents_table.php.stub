@@ -11,16 +11,12 @@ class CreateGeneratedDocumentsTable extends Migration
         Schema::create('generated_documents', function (Blueprint $table): void {
             $table->id();
             $table->uuid()->index();
-
             $table->json('fields')->nullable();
             $table->text('content');
-
             $table->string('disk');
-            $table->string('fileName');
-            $table->string('filePath')->nullable();
-
-            $table->string('contentHash', 64);
-
+            $table->string('file_name');
+            $table->string('file_path')->nullable();
+            $table->string('content_hash', 64);
             $table->timestamps();
         });
     }

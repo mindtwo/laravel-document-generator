@@ -19,9 +19,9 @@ use mindtwo\LaravelAutoCreateUuid\AutoCreateUuid;
  * @param  string  $uuid
  * @param  string  $model_type
  * @param  int  $model_id
- * @param  bool  $showBorder
+ * @param  bool  $show_border
  * @param  DocumentOrientation  $orientation
- * @param  DocumentWidth  $contentWidth
+ * @param  DocumentWidth  $content_width
  * @param  Collection  $blocks
  */
 class DocumentLayout extends Model
@@ -39,7 +39,7 @@ class DocumentLayout extends Model
      */
     protected $casts = [
         'orientation' => DocumentOrientation::class,
-        'contentWidth' => DocumentWidth::class,
+        'content_width' => DocumentWidth::class,
         'placeholder' => 'array',
     ];
 

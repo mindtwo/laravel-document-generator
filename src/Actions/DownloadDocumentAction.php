@@ -36,7 +36,7 @@ class DownloadDocumentAction
             throw new \Exception('Document was not saved to disk', 1);
         }
 
-        return $this->execute($generatedDocument->fileName, $generatedDocument->filePath, $generatedDocument->disk);
+        return $this->execute($generatedDocument->file_name, $generatedDocument->file_path, $generatedDocument->disk);
     }
 
     /**

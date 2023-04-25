@@ -33,23 +33,23 @@ abstract class Document
      *
      * @var ?string
      */
-    protected $layoutName = null;
+    protected $layout_name = null;
 
-    protected $showBorder = false;
+    protected $show_border = false;
 
     /**
      * Documents orientation.
      *
      * @var DocumentOrientation
      */
-    protected $documentOrientation = DocumentOrientation::Landscape;
+    protected $document_orientation = DocumentOrientation::Landscape;
 
     /**
      * Documents orientation.
      *
      * @var DocumentWidth
      */
-    protected $contentWidth = DocumentWidth::ThreeFourths;
+    protected $content_width = DocumentWidth::ThreeFourths;
 
     abstract public function blocks(): array;
 
@@ -69,7 +69,7 @@ abstract class Document
 
     public function getShowBorder(): bool
     {
-        return $this->showBorder;
+        return $this->show_border;
     }
 
     /**
@@ -79,8 +79,8 @@ abstract class Document
      */
     public function hashFields(): array
     {
-        if (isset($this->hashFields)) {
-            return $this->hashFields;
+        if (isset($this->hash_fields)) {
+            return $this->hash_fields;
         }
 
         return [];
@@ -93,8 +93,8 @@ abstract class Document
      */
     public function getLayoutName(): string
     {
-        if (isset($this->layoutName)) {
-            return $this->layoutName;
+        if (isset($this->layout_name)) {
+            return $this->layout_name;
         }
 
         return null;
@@ -107,7 +107,7 @@ abstract class Document
      */
     public function getDocumentOrientation(): DocumentOrientation
     {
-        return $this->documentOrientation;
+        return $this->document_orientation;
     }
 
     /**
@@ -117,7 +117,7 @@ abstract class Document
      */
     public function getContentWidth(): DocumentWidth
     {
-        return $this->contentWidth;
+        return $this->content_width;
     }
 
     /**
@@ -153,7 +153,7 @@ abstract class Document
      */
     public function setOrientation(DocumentOrientation $documentOrientation): self
     {
-        $this->documentOrientation = $documentOrientation;
+        $this->document_orientation = $documentOrientation;
 
         return $this;
     }
@@ -161,12 +161,12 @@ abstract class Document
     /**
      * Set document content width.
      *
-     * @param  DocumentWidth  $documentOrientation
+     * @param  DocumentWidth  $documentWidth
      * @return Document
      */
     public function setContentWidth(DocumentWidth $documentWidth): self
     {
-        $this->contentWidth = $documentWidth;
+        $this->content_width = $documentWidth;
 
         return $this;
     }
@@ -179,7 +179,7 @@ abstract class Document
      */
     public function setLayoutName(string $layoutName): self
     {
-        $this->layoutName = $layoutName;
+        $this->layout_name = $layoutName;
 
         return $this;
     }
@@ -192,7 +192,7 @@ abstract class Document
      */
     public function setShowBorder(bool $showBorder): self
     {
-        $this->showBorder = $showBorder;
+        $this->show_border = $showBorder;
 
         return $this;
     }
@@ -206,8 +206,8 @@ abstract class Document
         }
 
         $this->setOrientation($layout->orientation);
-        $this->setContentWidth($layout->contentWidth);
-        $this->setShowBorder($layout->showBorder);
+        $this->setContentWidth($layout->content_width);
+        $this->setShowBorder($layout->show_border);
 
         return $this;
     }
@@ -266,7 +266,7 @@ abstract class Document
     {
         $documentLayout = new DocumentLayout;
         $documentLayout->orientation = $this->getDocumentOrientation()->value;
-        $documentLayout->showBorder = $this->getShowBorder();
+        $documentLayout->show_border = $this->getShowBorder();
         $documentLayout->placeholder = $this->getPlaceholder();
 
         $this->model->document()->save($documentLayout);
@@ -279,7 +279,7 @@ abstract class Document
                 'position' => $block->position() ?? $index + 1,
                 'template' => $block->template(),
                 'show' => $block->show(),
-                'blockType' => $block::class,
+                'block_type' => $block::class,
             ]);
 
             $documentLayout->blocks()->save($newBlock);

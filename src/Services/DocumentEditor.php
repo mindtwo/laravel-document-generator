@@ -39,6 +39,6 @@ class DocumentEditor
 
         Config::set('documents.context', null);
 
-        return new EditDocument($layoutIdentifier, $editBlocks->mapWithKeys(fn ($b) => [$b->name => $b]), $layout->showBorder, $layout->contentWidth, $layout->orientation, $placeholder);
+        return new EditDocument($layoutIdentifier, $editBlocks->mapWithKeys(fn ($b) => [$b->name => $b]), $layout->show_border, $layout->content_width, $layout->orientation, $placeholder);
     }
 }

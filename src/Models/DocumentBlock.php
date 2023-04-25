@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @param  int  $position
  * @param  bool  $show
  * @param  string  $template
- * @param  string  $blockType
+ * @param  string  $block_type
  * @param  DocumentLayout  $layout
  */
 class DocumentBlock extends Model

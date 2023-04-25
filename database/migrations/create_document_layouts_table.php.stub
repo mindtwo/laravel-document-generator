@@ -13,20 +13,15 @@ class CreateDocumentLayoutsTable extends Migration
     {
         Schema::create('document_layouts', function (Blueprint $table): void {
             $table->id();
-
-            $table->integer('modelId');
-            $table->string('modelType');
-
-            $table->boolean('showBorder')->default(false);
-
-            $table->string('contentWidth')->default(DocumentWidth::ThreeFourths->value);
+            $table->uuid()->index();
+            $model_id = $table->unsignedInteger('model_id')->index();
+            $model_type = $table->string('model_type');
+            $table->boolean('show_border')->default(false);
+            $table->string('content_width')->default(DocumentWidth::ThreeFourths->value);
             $table->string('orientation')->default(DocumentOrientation::Landscape->value);
-
             $table->json('placeholder')->nullable();
-
             $table->timestamps();
-
-            $table->unique(['modelId', 'modelType']);
+            $table->index([$model_type->name, $model_id->name]);
         });
     }
 

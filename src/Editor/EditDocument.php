@@ -11,10 +11,10 @@ use mindtwo\DocumentGenerator\Http\Resources\EditLayoutResource;
 class EditDocument
 {
     public function __construct(
-        public int|string $layoutIdentifier,
+        public int|string $layout_identifier,
         public Collection $blocks,
-        public ?bool $showBorder,
-        public ?DocumentWidth $contentWidth,
+        public ?bool $show_border,
+        public ?DocumentWidth $content_width,
         public ?DocumentOrientation $orientation,
         public ?array $placeholder,
     ) {
@@ -35,10 +35,10 @@ class EditDocument
         $validated = $editLayoutRequest->validated();
 
         return new self(
-            layoutIdentifier: $validated['layoutIdentifier'],
+            layout_identifier: $validated['layout_identifier'],
             blocks: $validated['blocks'],
-            showBorder: $validated['showBorder'],
-            contentWidth: $validated['contentWidth'],
+            show_border: $validated['show_border'],
+            content_width: $validated['content_width'],
             orientation: $validated['orientation'],
             placeholder: null,
         );

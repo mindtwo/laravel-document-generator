@@ -42,12 +42,12 @@ class TmpDocument extends Document
 
         return collect($this->blocks())->map(function ($block) use ($layout) {
             $documentBlock = $layout->blocks()->where('name', $block['name'])->first();
-            $isBladeBlock = $documentBlock->blockType === BladeBlock::class;
+            $isBladeBlock = $documentBlock->block_type === BladeBlock::class;
 
             return (new DocumentBlock)->fill([
                 'show' => $block['show'],
                 'name' => $documentBlock->name,
-                'blockType' => $documentBlock->blockType,
+                'block_type' => $documentBlock->block_type,
                 'template' => $isBladeBlock ? $documentBlock->template : $block['content'],
                 'position' => 1,
             ]);
@@ -56,7 +56,7 @@ class TmpDocument extends Document
 
     public function getLayoutName(): string
     {
-        return $this->documentSettings['layoutName'];
+        return $this->documentSettings['layout_name'];
     }
 
     public function getDocumentOrientation(): DocumentOrientation
@@ -68,13 +68,13 @@ class TmpDocument extends Document
 
     public function getContentWidth(): DocumentWidth
     {
-        $contentWidth = DocumentWidth::tryFrom($this->documentSettings['contentWidth']);
+        return DocumentWidth::tryFrom($this->documentSettings['content_width']);
 
         return $contentWidth;
     }
 
     public function getShowBorder(): bool
     {
-        return $this->documentSettings['showBorder'] ?? false;
+        return $this->documentSettings['show_border'] ?? false;
     }
 }

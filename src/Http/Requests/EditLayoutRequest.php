@@ -45,8 +45,8 @@ class EditLayoutRequest extends FormRequest
                 $fail('The :attribute must be a valid document identifier.');
             }],
             'blocks' => 'required|array',
-            'showBorder' => 'boolean',
-            'contentWidth' => 'string',
+            'show_border' => 'boolean',
+            'content_width' => 'string',
             'orientation' => 'string',
         ];
     }

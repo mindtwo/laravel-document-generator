@@ -87,7 +87,7 @@ class DocumentController extends BaseController
             abort(404);
         }
 
-        return $this->downloadDocumentAction->execute($generatedDocument->fileName, $generatedDocument->filePath, $generatedDocument->disk);
+        return $this->downloadDocumentAction->execute($generatedDocument->file_name, $generatedDocument->file_path, $generatedDocument->disk);
     }
 
     /**
