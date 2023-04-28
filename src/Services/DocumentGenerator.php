@@ -106,10 +106,10 @@ class DocumentGenerator
      */
     public function saveToFile(GeneratedDocument &$generatedDocument, Document $document, $temporary = false, $withoutEvent = false): ?string
     {
-        $fullpath = $this->getDocumentPath($document, $temporary);
-        $fileName = basename($fullpath);
+        $fullPath = $this->getDocumentPath($document, $temporary);
+        $fileName = basename($fullPath);
 
-        $filePath = str_replace("/$fileName", '', $fullpath);
+        $filePath = str_replace("/$fileName", '', $fullPath);
 
         $generatedDocument->file_name = $fileName;
         $generatedDocument->file_path = $filePath;
@@ -188,7 +188,7 @@ class DocumentGenerator
 
         $file = $dompdf->output();
 
-        $filePath = $generatedDocument->fullpath;
+        $filePath = $generatedDocument->full_path;
 
         if ($this->filesystem->put($filePath, $file)) {
             return $filePath;
