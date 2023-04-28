@@ -31,6 +31,7 @@ class GeneratedDocument extends Model
     use AutoCreateUuid;
 
     protected $fillable = [
+        'uuid',
         'content',
         'fields',
     ];
