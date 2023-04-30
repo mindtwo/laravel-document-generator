@@ -66,7 +66,7 @@ class DocumentGenerator
         $generatedDocument = new GeneratedDocument;
 
         $generatedDocument->content = $output;
-        $generatedDocument->contentHash = $contentHash;
+        $generatedDocument->content_hash = $contentHash;
         $generatedDocument->fields = $fields;
 
         DocumentCreatedEvent::dispatch($generatedDocument);
