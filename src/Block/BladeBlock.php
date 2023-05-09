@@ -76,7 +76,7 @@ class BladeBlock implements Block
         $placeholders = $placeholders['placeholder'] ?? [];
         // remove orientation from placeholder
         $placeholders = \array_filter($placeholders, static function ($element) {
-            return $element !== "orientation";
+            return $element !== 'orientation';
         });
 
         Log::debug($placeholders);

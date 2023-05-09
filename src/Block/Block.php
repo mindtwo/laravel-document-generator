@@ -38,7 +38,7 @@ interface Block
      * Get rendered blocks that are substituted
      *
      * @param  array  $fields
-     * @param  DocumentOrientation $orientation
+     * @param  DocumentOrientation  $orientation
      * @return string
      */
     public function render(array $fields, DocumentOrientation $orientation): string;

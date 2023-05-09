@@ -3,7 +3,6 @@
 namespace mindtwo\DocumentGenerator\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 use mindtwo\DocumentGenerator\Block\Block;
 use mindtwo\DocumentGenerator\Document\Field;
 use mindtwo\DocumentGenerator\Document\RenderedBlock;

@@ -226,7 +226,7 @@ abstract class Document
      */
     public function getName(): string
     {
-        if (!is_null(config('documents.files.name_generator'))) {
+        if (! is_null(config('documents.files.name_generator'))) {
             $generatorClass = config('documents.files.name_generator');
 
             if (is_subclass_of($generatorClass, NameGenerator::class)) {
