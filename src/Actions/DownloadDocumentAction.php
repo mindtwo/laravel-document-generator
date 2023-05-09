@@ -21,7 +21,7 @@ class DownloadDocumentAction
     {
         $disk = $this->getDiskInstance($disk);
 
-        return $disk->download("{$filePath}/{$fileName}");
+        return $disk->download("{$filePath}/{$fileName}", $fileName);
     }
 
     /**
