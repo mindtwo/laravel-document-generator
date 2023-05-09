@@ -137,7 +137,10 @@ class DocumentGenerator
     {
         $dompdf = $this->buildPdf($generatedDocument, $document);
 
-        return $dompdf->stream();
+        $dompdf->stream('document.pdf', [
+            'Attachment' => false,
+        ]);
+        exit(0);
     }
 
     /**
