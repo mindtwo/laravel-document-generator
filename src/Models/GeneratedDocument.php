@@ -79,7 +79,7 @@ class GeneratedDocument extends Model
     public function fullPath(): Attribute
     {
         return Attribute::make(
-            get: fn () => "{$this->filePath}/{$this->file_name}"
+            get: fn () => "{$this->file_path}/{$this->file_name}"
         );
     }
 
