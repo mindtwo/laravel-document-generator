@@ -133,6 +133,13 @@ class DocumentGenerator
         return $savedPath;
     }
 
+    public function stream(GeneratedDocument $generatedDocument, Document $document)
+    {
+        $dompdf = $this->buildPdf($generatedDocument, $document);
+
+        return $dompdf->stream();
+    }
+
     /**
      * Set resolve context for placholders.
      *
@@ -164,6 +171,29 @@ class DocumentGenerator
      */
     private function generatePdf(GeneratedDocument $generatedDocument, Document $document): ?string
     {
+        $dompdf = $this->buildPdf($generatedDocument, $document);
+
+        $file = $dompdf->output();
+
+        $filePath = $generatedDocument->full_path;
+
+        if ($this->filesystem->put($filePath, $file)) {
+            return $filePath;
+        }
+
+        return null;
+    }
+
+    /**
+     * Generate pdf from html string output
+     * Use document as helper for orientation here.
+     *
+     * @param  GeneratedDocument  $generatedDocument
+     * @param  Document  $document
+     * @return Dompdf
+     */
+    private function buildPdf(GeneratedDocument $generatedDocument, Document $document): Dompdf
+    {
         $options = new Options();
         $options->set('isRemoteEnabled', true);
 
@@ -183,18 +213,9 @@ class DocumentGenerator
 
         $dompdf->setPaper('A4', $document->loadLayout()->getDocumentOrientation()->value);
 
-        // Render the HTML as PDF
         $dompdf->render();
 
-        $file = $dompdf->output();
-
-        $filePath = $generatedDocument->full_path;
-
-        if ($this->filesystem->put($filePath, $file)) {
-            return $filePath;
-        }
-
-        return null;
+        return $dompdf;
     }
 
     /**

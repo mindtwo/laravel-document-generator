@@ -13,6 +13,7 @@ use mindtwo\DocumentGenerator\Http\Requests\EditLayoutRequest;
 use mindtwo\DocumentGenerator\Models\DocumentLayout;
 use mindtwo\DocumentGenerator\Models\GeneratedDocument;
 use mindtwo\DocumentGenerator\Services\DocumentEditor;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentController extends BaseController
@@ -20,7 +21,6 @@ class DocumentController extends BaseController
     public function __construct(
         protected DocumentEditor $documentEditor,
         protected UpdateLayoutAction $updateLayoutAction,
-        protected DownloadDocumentAction $downloadDocumentAction,
         protected DeleteDocumentAction $deleteDocumentAction,
     ) {
     }
@@ -73,9 +73,10 @@ class DocumentController extends BaseController
      * Download document by uuid.
      *
      * @param  string  $documentId
-     * @return StreamedResponse
+     * @param DownloadDocumentAction $downloadDocumentAction
+     * @return BinaryFileResponse
      */
-    public function download(string $documentId): StreamedResponse
+    public function download(string $documentId, DownloadDocumentAction $downloadDocumentAction): BinaryFileResponse|StreamedResponse
     {
         $generatedDocument = GeneratedDocument::where('uuid', $documentId)->first();
 
@@ -87,16 +88,17 @@ class DocumentController extends BaseController
             abort(404);
         }
 
-        return $this->downloadDocumentAction->execute($generatedDocument->file_name, $generatedDocument->file_path, $generatedDocument->disk);
+        return ($downloadDocumentAction)($generatedDocument);
     }
 
     /**
      * Download tmp document by it's name and delete it afterwards.
      *
      * @param  string  $documentId
-     * @return StreamedResponse
+     * @param DownloadDocumentAction $downloadDocumentAction
+     * @return BinaryFileResponse
      */
-    public function getTmp(string $fileName): StreamedResponse
+    public function getTmp(string $fileName, DownloadDocumentAction $downloadDocumentAction): BinaryFileResponse|StreamedResponse
     {
         if (! Gate::allows('create-tmp-document')) {
             abort(401);
@@ -111,6 +113,6 @@ class DocumentController extends BaseController
                 Log::warning("Couldn't find tmpFile {$tmpPath}/{$fileName} skipping...");
             });
 
-        return $this->downloadDocumentAction->execute($fileName, $tmpPath);
+        return ($downloadDocumentAction)->execute($fileName, $tmpPath);
     }
 }

@@ -5,38 +5,39 @@ namespace mindtwo\DocumentGenerator\Actions;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use mindtwo\DocumentGenerator\Models\GeneratedDocument;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DownloadDocumentAction
 {
+
+    /**
+     * Download given document.
+     *
+     * @param GeneratedDocument $document
+     * @param boolean $stream
+     * @param boolean $inline
+     * @return BinaryFileResponse
+     */
+    public function __invoke(GeneratedDocument $document, bool $stream = false, bool $inline = false): BinaryFileResponse
+    {
+        $disk = $this->getDiskInstance($document->disk);
+
+        return response()->download($disk->path("{$document->file_path}/{$document->file_name}"), $document->file_name, [], $inline ? 'inline' : 'attachment');
+    }
+
     /**
      * Download document by fileName. A filePath and diskName may be passed.
      *
      * @param  string  $fileName - name of file
      * @param  string  $filePath - path in filesystem
      * @param  string|null  $disk - name of filesystem
-     * @return StreamedResponse
+     * @return BinaryFileResponse
      */
-    public function execute(string $fileName, string $filePath = '', ?string $disk = null): StreamedResponse
+    public function execute(string $fileName, string $filePath = '', ?string $disk = null): BinaryFileResponse
     {
         $disk = $this->getDiskInstance($disk);
 
-        return $disk->download("{$filePath}/{$fileName}", $fileName);
-    }
-
-    /**
-     * Download document file from GeneratedDocument instance.
-     *
-     * @param  GeneratedDocument  $generatedDocument
-     * @return StreamedResponse
-     */
-    public function executeWithDocument(GeneratedDocument $generatedDocument): StreamedResponse
-    {
-        if (! $generatedDocument->saved_to_disk) {
-            throw new \Exception('Document was not saved to disk', 1);
-        }
-
-        return $this->execute($generatedDocument->file_name, $generatedDocument->file_path, $generatedDocument->disk);
+        return response()->download($disk->path("{$filePath}/{$fileName}"), $fileName);
     }
 
     /**
