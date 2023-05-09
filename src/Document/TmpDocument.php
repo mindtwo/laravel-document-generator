@@ -69,8 +69,6 @@ class TmpDocument extends Document
     public function getContentWidth(): DocumentWidth
     {
         return DocumentWidth::tryFrom($this->documentSettings['content_width']);
-
-        return $contentWidth;
     }
 
     public function getShowBorder(): bool
