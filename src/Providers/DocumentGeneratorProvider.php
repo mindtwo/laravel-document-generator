@@ -69,6 +69,8 @@ class DocumentGeneratorProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__.'/../../config/documents.php', 'documents');
+
         $this->app->singleton(PlaceholderResolver::class, function (Application $app) {
             return new PlaceholderResolver(config('documents'));
         });

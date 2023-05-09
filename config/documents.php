@@ -56,6 +56,10 @@ return [
          */
         'policy' => null,
 
+        /**
+         * Middleware stack to use for document routes.
+         */
+        'middleware' => 'web',
     ],
 
     /**

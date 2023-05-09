@@ -6,7 +6,9 @@ use mindtwo\DocumentGenerator\Http\Controllers\DocumentController;
 /**
  * Routes for documents generator package
  */
-Route::name('documents.')->prefix('documents')->middleware('web')->group(function () {
+Route::name('documents.')->prefix('documents')->middleware(
+    config('documents.security.middleware', 'web')
+)->group(function () {
     Route::get('/tmp/{fileName}', [DocumentController::class, 'getTmp'])->name('tmp');
     Route::get('/download/{documentId}', [DocumentController::class, 'download'])->name('download');
 
