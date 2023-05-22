@@ -69,11 +69,11 @@ class TmpDocument extends Document
 
     public function getContentWidth(): DocumentWidth
     {
-        return DocumentWidth::tryFrom($this->documentSettings['content_width']);
+        return DocumentWidth::tryFrom($this->documentSettings['content_width'] ?? $this->documentSettings['contentWidth']);
     }
 
     public function getShowBorder(): bool
     {
-        return $this->documentSettings['show_border'] ?? false;
+        return $this->documentSettings['show_border'] ?? $this->documentSettings['showBorder'] ?? false;
     }
 }
