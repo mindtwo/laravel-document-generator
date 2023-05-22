@@ -23,7 +23,7 @@ return [
 
         /**
          * Default file name generator class to use to retrieve document names.
-         * If null use 'date_modelType_layoutName.pdf'
+         * If null use 'date_model_type_layout_name.pdf'
          *
          * Default: null
          */
