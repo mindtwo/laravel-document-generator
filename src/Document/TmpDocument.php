@@ -56,7 +56,8 @@ class TmpDocument extends Document
 
     public function getLayoutName(): string
     {
-        return $this->documentSettings['layout_name'];
+        // compability reasons
+        return $this->documentSettings['layout_name'] ?? $this->documentSettings['layoutName'];
     }
 
     public function getDocumentOrientation(): DocumentOrientation
