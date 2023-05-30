@@ -88,7 +88,17 @@ class DocumentController extends BaseController
             abort(404);
         }
 
-        return ($downloadDocumentAction)($generatedDocument);
+        try {
+            return ($downloadDocumentAction)($generatedDocument);
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage(), [
+                'documentId' => $documentId,
+                'generatedDocument' => $generatedDocument,
+                'trace' => $th->getTrace(),
+            ]);
+
+            abort(500);
+        }
     }
 
     /**
