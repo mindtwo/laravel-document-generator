@@ -13,7 +13,6 @@ use mindtwo\DocumentGenerator\Http\Requests\EditLayoutRequest;
 use mindtwo\DocumentGenerator\Models\DocumentLayout;
 use mindtwo\DocumentGenerator\Models\GeneratedDocument;
 use mindtwo\DocumentGenerator\Services\DocumentEditor;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentController extends BaseController
@@ -74,9 +73,9 @@ class DocumentController extends BaseController
      *
      * @param  string  $documentId
      * @param DownloadDocumentAction $downloadDocumentAction
-     * @return BinaryFileResponse
+     * @return StreamedResponse
      */
-    public function download(string $documentId, DownloadDocumentAction $downloadDocumentAction): BinaryFileResponse|StreamedResponse
+    public function download(string $documentId, DownloadDocumentAction $downloadDocumentAction): StreamedResponse
     {
         $generatedDocument = GeneratedDocument::where('uuid', $documentId)->first();
 
@@ -106,9 +105,9 @@ class DocumentController extends BaseController
      *
      * @param  string  $documentId
      * @param DownloadDocumentAction $downloadDocumentAction
-     * @return BinaryFileResponse
+     * @return StreamedResponse
      */
-    public function getTmp(string $fileName, DownloadDocumentAction $downloadDocumentAction): BinaryFileResponse|StreamedResponse
+    public function getTmp(string $fileName, DownloadDocumentAction $downloadDocumentAction): StreamedResponse
     {
         if (! Gate::allows('create-tmp-document')) {
             abort(401);

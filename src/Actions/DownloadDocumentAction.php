@@ -4,7 +4,7 @@ namespace mindtwo\DocumentGenerator\Actions;
 
 use Illuminate\Support\Facades\Storage;
 use mindtwo\DocumentGenerator\Models\GeneratedDocument;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DownloadDocumentAction
 {
@@ -15,16 +15,19 @@ class DownloadDocumentAction
      * @param GeneratedDocument $document
      * @param boolean $stream
      * @param boolean $inline
-     * @return BinaryFileResponse
+     * @return StreamedResponse
      */
-    public function __invoke(GeneratedDocument $document, bool $stream = false, bool $inline = false): BinaryFileResponse
+    public function __invoke(GeneratedDocument $document, bool $stream = false, bool $inline = false): StreamedResponse
     {
         if (!$document->saved_to_disk) {
             abort(404);
         }
 
         $disk = $document->diskInstance();
-        return response()->download($disk->path("{$document->full_path}"), $document->file_name, [], $inline ? 'inline' : 'attachment');
+
+        return $disk->download($document->full_path, $document->file_name, [
+            "Content-Disposition" => ($inline ? 'inline' : 'attachment') . "; filename={$document->file_name}",
+        ]);
     }
 
     /**
@@ -33,16 +36,18 @@ class DownloadDocumentAction
      * @param  string  $fileName - name of file
      * @param  string  $filePath - path in filesystem
      * @param  string|null  $disk - name of filesystem
-     * @return BinaryFileResponse
+     * @return StreamedResponse
      */
-    public function execute(string $fileName, string $filePath = '', ?string $disk = null): BinaryFileResponse
+    public function execute(string $fileName, string $filePath = '', ?string $disk = null, bool $inline = false): StreamedResponse
     {
-        if (is_null($diskName)) {
-            $diskName = config('documents.files.disk') ?? 'local';
+        if (is_null($disk)) {
+            $disk = config('documents.files.disk') ?? 'local';
         }
 
 
-        $disk = Storage::disk($diskName);
-        return response()->download($disk->path("{$filePath}/{$fileName}"), $fileName);
+        $disk = Storage::disk($disk);
+        return $disk->download($filePath, $fileName, [
+            "Content-Disposition" => ($inline ? 'inline' : 'attachment') . "; filename={$document->file_name}",
+        ]);
     }
 }
