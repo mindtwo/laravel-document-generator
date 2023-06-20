@@ -47,7 +47,7 @@ class DownloadDocumentAction
 
         $disk = Storage::disk($disk);
         return $disk->download($filePath, $fileName, [
-            "Content-Disposition" => ($inline ? 'inline' : 'attachment') . "; filename={$document->file_name}",
+            "Content-Disposition" => ($inline ? 'inline' : 'attachment') . "; filename={$fileName}",
         ]);
     }
 }
