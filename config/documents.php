@@ -59,7 +59,8 @@ return [
         /**
          * Middleware stack to use for document routes.
          */
-        'middleware' => 'web',
+        'admin_middleware' => 'web',
+        'download_middleware' => 'web',
     ],
 
     /**
