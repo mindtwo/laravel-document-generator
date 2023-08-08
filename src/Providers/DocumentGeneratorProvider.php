@@ -112,6 +112,7 @@ class DocumentGeneratorProvider extends ServiceProvider
     private function registerGate()
     {
         $policyClass = config('documents.security.policy');
+
         if ($policyClass === null || ! is_subclass_of($policyClass, DocumentPolicy::class)) {
             $policyClass = \mindtwo\DocumentGenerator\Security\DefaultDocumentPolicy::class;
         }
@@ -124,8 +125,6 @@ class DocumentGeneratorProvider extends ServiceProvider
 
     /**
      * Get our migration paths
-     *
-     * @return array
      */
     private function getMigrationsPath(): array
     {
@@ -135,8 +134,6 @@ class DocumentGeneratorProvider extends ServiceProvider
 
     /**
      * Get disk instance for the file system
-     *
-     * @return Filesystem
      */
     private function getDiskInstance(): Filesystem
     {

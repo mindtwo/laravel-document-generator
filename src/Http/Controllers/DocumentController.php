@@ -79,7 +79,7 @@ class DocumentController extends BaseController
     {
         $generatedDocument = GeneratedDocument::where('uuid', $documentId)->first();
 
-        if (! is_null($generatedDocument) && ! Gate::allows('download-document', $generatedDocument)) {
+        if (is_null($generatedDocument) || Gate::denies('download-document', $generatedDocument)) {
             abort(401);
         }
 
