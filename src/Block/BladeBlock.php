@@ -79,8 +79,16 @@ class BladeBlock implements Block
             return $element !== 'orientation';
         });
 
-        Log::debug($placeholders);
-
         return $placeholders;
+    }
+
+    /**
+     * Get unrendered block template
+     *
+     * @return string
+     */
+    public function unrender(): string
+    {
+        return $this->templateContents();
     }
 }

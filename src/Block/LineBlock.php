@@ -56,4 +56,14 @@ class LineBlock implements Block
 
         return "<div>$rendered</div>";
     }
+
+    /**
+     * Get unrendered block template
+     *
+     * @return string
+     */
+    public function unrender(): string
+    {
+        return $this->template;
+    }
 }

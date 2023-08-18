@@ -71,4 +71,11 @@ interface Block
      * @return array
      */
     public function placeholder(): array;
+
+    /**
+     * Get unrendered block template
+     *
+     * @return string
+     */
+    public function unrender(): string;
 }

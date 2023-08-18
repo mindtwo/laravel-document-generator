@@ -10,6 +10,8 @@ class EditBlock
         public bool $show,
         public bool $hasEditor,
         public array $fields,
+        public array $fieldNames,
+        public string $rawContent,
     ) {
     }
 }

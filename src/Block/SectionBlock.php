@@ -59,4 +59,14 @@ class SectionBlock implements Block
 
         return "<section>$rendered</section>";
     }
+
+    /**
+     * Get unrendered block template
+     *
+     * @return string
+     */
+    public function unrender(): string
+    {
+        return $this->template;
+    }
 }

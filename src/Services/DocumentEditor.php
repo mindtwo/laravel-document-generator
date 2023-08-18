@@ -3,6 +3,7 @@
 namespace mindtwo\DocumentGenerator\Services;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use mindtwo\DocumentGenerator\Document\Document;
 use mindtwo\DocumentGenerator\Editor\EditDocument;
 use mindtwo\DocumentGenerator\Enums\ResolveContext;

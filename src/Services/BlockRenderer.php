@@ -73,6 +73,14 @@ class BlockRenderer
 
         $output = $block->render($resolved, $documentLayout->orientation);
 
-        return new EditBlock($documentBlock->name, $output, $block->show(), $hasEditor, $resolved);
+        return new EditBlock(
+            name: $documentBlock->name,
+            content: $output,
+            show: $block->show(),
+            hasEditor: $hasEditor,
+            fields: $resolved,
+            fieldNames: $block->placeholder(),
+            rawContent: $block->unrender(),
+        );
     }
 }
