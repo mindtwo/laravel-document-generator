@@ -83,7 +83,7 @@ class BlockRenderer
             $resolved[] = $field;
         }
 
-        $output = $block->render($resolved, $documentLayout->orientation);
+        $output = $block->render($resolved, $documentLayout->orientation, true);
 
         return new EditBlock(
             name: $documentBlock->name,

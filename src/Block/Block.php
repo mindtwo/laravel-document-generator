@@ -39,9 +39,10 @@ interface Block
      *
      * @param  array  $fields
      * @param  DocumentOrientation  $orientation
+     * @param  bool  $force
      * @return string
      */
-    public function render(array $fields, DocumentOrientation $orientation): string;
+    public function render(array $fields, DocumentOrientation $orientation, bool $force): string;
 
     /**
      * Get array of columns we are allowed to update

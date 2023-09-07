@@ -48,9 +48,9 @@ class SectionBlock implements Block
     /**
      * {@inheritDoc}
      */
-    public function render(?array $fields, DocumentOrientation $orientation): string
+    public function render(?array $fields, DocumentOrientation $orientation, bool $force = false): string
     {
-        if (! $this->show) {
+        if (! $this->show && ! $force) {
             return '';
         }
 
