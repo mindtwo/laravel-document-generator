@@ -9,16 +9,15 @@ use Illuminate\Support\Facades\Log;
 use mindtwo\DocumentGenerator\Actions\DeleteDocumentAction;
 use mindtwo\DocumentGenerator\Actions\DownloadDocumentAction;
 use mindtwo\DocumentGenerator\Actions\UpdateLayoutAction;
+use mindtwo\DocumentGenerator\Editor\EditLayout;
 use mindtwo\DocumentGenerator\Http\Requests\EditLayoutRequest;
 use mindtwo\DocumentGenerator\Models\DocumentLayout;
 use mindtwo\DocumentGenerator\Models\GeneratedDocument;
-use mindtwo\DocumentGenerator\Services\DocumentEditor;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentController extends BaseController
 {
     public function __construct(
-        protected DocumentEditor $documentEditor,
         protected UpdateLayoutAction $updateLayoutAction,
         protected DeleteDocumentAction $deleteDocumentAction,
     ) {
@@ -38,11 +37,10 @@ class DocumentController extends BaseController
             abort(401);
         }
 
-        /** @var EditDocument $editDocument */
-        $editDocument = $this->documentEditor->loadLayout($layoutIdentifier);
+        $editLayout = EditLayout::make($documentLayout);
 
         return response()->json([
-            'editDocument' => $editDocument->toJson(),
+            'editDocument' => $editLayout->toJson(),
         ]);
     }
 

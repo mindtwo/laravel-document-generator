@@ -25,7 +25,7 @@ class UpdateBlockAction
 
         $block = $documentBlock->block_type::from($documentBlock);
 
-        if ($block->hasEditor()) {
+        if ($block->hasEditor() && $data->get('show') === true) {
             $data->put('template', $block->prepareTemplate($data->get('content')));
         }
 

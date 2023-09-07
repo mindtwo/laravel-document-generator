@@ -12,7 +12,6 @@ use mindtwo\DocumentGenerator\Commands\MakePlaceholderCommand;
 use mindtwo\DocumentGenerator\Security\DocumentPolicy;
 use mindtwo\DocumentGenerator\Services\BlockRenderer;
 use mindtwo\DocumentGenerator\Services\BlockTemplateResolver;
-use mindtwo\DocumentGenerator\Services\DocumentEditor;
 use mindtwo\DocumentGenerator\Services\DocumentGenerator;
 use mindtwo\DocumentGenerator\Services\PlaceholderResolver;
 
@@ -93,14 +92,6 @@ class DocumentGeneratorProvider extends ServiceProvider
             $blockRenderer = $app->make(BlockRenderer::class);
 
             return new DocumentGenerator($disk, $blockRenderer);
-        });
-
-        $this->app->bind(DocumentEditor::class, function (Application $app) {
-            $blockRenderer = $app->make(BlockRenderer::class);
-
-            $placeholderResolver = $app->make(PlaceholderResolver::class);
-
-            return new DocumentEditor($blockRenderer, $placeholderResolver);
         });
     }
 
