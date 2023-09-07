@@ -36,7 +36,10 @@ class DocumentEditor
             $editBlocks->push($editBlock);
         }
 
-        $placeholder = $this->placeholderResolver->resolveAll($layout->placeholder, $layout->model);
+        $placeholder = [];
+        if (null !== ($model = $layout->model)) {
+            $placeholder = $this->placeholderResolver->resolveAll($layout->placeholder, $model);
+        }
 
         Config::set('documents.context', null);
 

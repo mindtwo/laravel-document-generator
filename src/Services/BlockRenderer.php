@@ -74,7 +74,6 @@ class BlockRenderer
 
             if (!is_null($model)) {
                 $field = $this->placeholderResolver->resolve($placeholder, $model);
-
             }
 
             if ($hasEditor && in_array($placeholder, $editPlaceholders)) {
