@@ -3,6 +3,7 @@
 namespace mindtwo\DocumentGenerator\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use mindtwo\DocumentGenerator\Block\Block;
 use mindtwo\DocumentGenerator\Document\Field;
 use mindtwo\DocumentGenerator\Document\RenderedBlock;
@@ -49,7 +50,6 @@ class BlockRenderer
      */
     public function editBlock(DocumentBlock $documentBlock, DocumentLayout $documentLayout): EditBlock
     {
-        /** @var Model $model */
         $model = $documentLayout->model;
 
         /** @var array $editPlaceholders */
@@ -62,7 +62,20 @@ class BlockRenderer
         /** @var Field[] $resolved */
         $resolved = [];
         foreach ($block->placeholder() as $placeholder) {
-            $field = $this->placeholderResolver->resolve($placeholder, $model);
+            if (is_null($model)) {
+                Log::error('DocumentGenerator: Model is null', [
+                    'placeholder' => $placeholder,
+                    'block' => $block->template(),
+                    'layout' => $documentLayout,
+                ]);
+            }
+
+            $field = new Field($placeholder, null);
+
+            if (!is_null($model)) {
+                $field = $this->placeholderResolver->resolve($placeholder, $model);
+
+            }
 
             if ($hasEditor && in_array($placeholder, $editPlaceholders)) {
                 $field->value = "{{$placeholder}}";

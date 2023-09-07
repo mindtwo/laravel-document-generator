@@ -20,6 +20,7 @@ use mindtwo\LaravelAutoCreateUuid\AutoCreateUuid;
  * @param  string  $model_type
  * @param  int  $model_id
  * @param  bool  $show_border
+ * @param ?Model $model
  * @param  DocumentOrientation  $orientation
  * @param  DocumentWidth  $content_width
  * @param  Collection  $blocks
