@@ -24,9 +24,9 @@ class BlockRenderer
      * Render Block for document
      *
      * @param  Block  $block
-     * @return RenderedBlock
+     * @return string|RenderedBlock
      */
-    public function renderBlock(Block $block, Model $model, DocumentOrientation $orientation): RenderedBlock
+    public function renderBlock(Block $block, Model $model, DocumentOrientation $orientation): string|RenderedBlock
     {
         if (! $block->show()) {
             return '';

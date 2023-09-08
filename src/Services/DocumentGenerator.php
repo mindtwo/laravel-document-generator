@@ -43,8 +43,11 @@ class DocumentGenerator
 
             $renderedBlock = $this->blockRenderer->renderBlock($block, $model, $document->getDocumentOrientation());
 
-            $content .= $renderedBlock->content;
+            $content .= is_string($renderedBlock) ? $renderedBlock : $renderedBlock->content;
 
+            if (is_string($renderedBlock)) {
+                continue;
+            }
             $fields->push(...array_values($renderedBlock->fields));
         }
 
