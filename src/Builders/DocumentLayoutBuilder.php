@@ -10,7 +10,11 @@ class DocumentLayoutBuilder extends Builder
 {
     public function byIdentifier(string|int $layoutIdentifier): self
     {
-        return $this->whereUuid($layoutIdentifier)->orWhere('id', $layoutIdentifier);
+        return $this->when(is_string($layoutIdentifier),
+            fn($q) => $q->whereUuid($layoutIdentifier)
+        )->when(is_int($layoutIdentifier),
+            fn($q) => $q->where('id', $layoutIdentifier)
+        );
     }
 
     public function forModel(Model $model): self
