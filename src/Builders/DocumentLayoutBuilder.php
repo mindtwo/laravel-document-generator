@@ -5,16 +5,14 @@ namespace mindtwo\DocumentGenerator\Builders;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Str;
 
 class DocumentLayoutBuilder extends Builder
 {
     public function byIdentifier(string|int $layoutIdentifier): self
     {
-        return $this->when(is_string($layoutIdentifier),
-            fn($q) => $q->whereUuid($layoutIdentifier)
-        )->when(is_int($layoutIdentifier),
-            fn($q) => $q->where('id', $layoutIdentifier)
-        );
+
+        return $this->when(Str::isUuid($layoutIdentifier), fn ($q) => $q->where('uuid', $layoutIdentifier), fn ($q) => $q->where('id', $layoutIdentifier));
     }
 
     public function forModel(Model $model): self
