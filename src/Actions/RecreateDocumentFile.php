@@ -12,6 +12,13 @@ class RecreateDocumentFile
     {
         $documentGenerator = app(DocumentGenerator::class);
 
+        $newDocument = $documentGenerator->generateDocument($document, $document->getModel());
+
+        $generatedDocument->file_path = $newDocument->file_path;
+        $generatedDocument->content = $newDocument->content;
+        $generatedDocument->content_hash = $newDocument->content_hash;
+        $generatedDocument->fields = $newDocument->fields;
+
         $filePath = $documentGenerator->saveToFile($generatedDocument, $document, false, true);
 
         if (is_null($filePath)) {
