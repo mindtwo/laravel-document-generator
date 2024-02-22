@@ -15,20 +15,23 @@
         }
     ],
     "require": {
-        "php": "^8.0|^8.1",
+        "php": "^8.2",
         "mindtwo/laravel-auto-create-uuid": "^2.6",
         "dompdf/dompdf": "^2.0.3",
         "ramsey/uuid": "^4.7",
         "laravel/framework": "^9.0|^10.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.2"
+        "laravel/pint": "^1.2",
+        "pestphp/pest": "^2.34",
+        "orchestra/testbench": "^8.21"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "mindtwo\\DocumentGenerator\\": "src/"
+            "mindtwo\\DocumentGenerator\\": "src/",
+            "Tests\\": "tests/"
         },
         "files": [
             "src/helpers.php"
@@ -40,6 +43,11 @@
                 "mindtwo\\DocumentGenerator\\Providers\\DocumentGeneratorProvider"
             ],
             "aliases": {}
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     }
 }
