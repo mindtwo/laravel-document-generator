@@ -9,58 +9,47 @@ return [
      */
     'migrations_path' => database_path('documents'),
 
+    'file_creator' => \mindtwo\DocumentGenerator\Modules\Generation\Services\DomPdfFileCreator::class,
+
     /**
      * File related configuration
      */
     'files' => [
 
         /**
-         * Disk to save documents in.
-         *
-         * Default: 'env('DOCUMENT_DISK', 'local')'
-         */
-        'disk' => env('DOCUMENT_DISK', 'local'),
-
-        /**
-         * Default file name generator class to use to retrieve document names.
-         * If null use 'date_model_type_layout_name.pdf'
-         *
-         * Default: null
-         */
-        'name_generator' => null,
-
-        /**
          * Path in disk for generated documents.
          *
          * Default: 'documents'
          */
-        'path' => 'documents',
+        'root_path' => 'documents',
+
+        /**
+         * Disk to save documents in.
+         *
+         * Default: 'env('DOCUMENT_DISK', 'local')'
+         */
+        'default_disk' => env('DOCUMENT_DISK', 'local'),
+
+        /**
+         * Default file name generator class used to get the name for the document.
+         *
+         * Default: \mindtwo\DocumentGenerator\Modules\Generation\DefaultFileNameGenerator::class
+         */
+        'file_name_generator' => \mindtwo\DocumentGenerator\Modules\Generation\DefaultFileNameGenerator::class,
+
+        /**
+         * Default file path generator used to get the path for the document relative to root.
+         *
+         * Default: null
+         */
+        'file_path_generator' => \mindtwo\DocumentGenerator\Modules\Generation\DefaultFilePathGenerator::class,
 
         /**
          * Tmp path for temp save of generated files.
          *
          * Default: '/tmp/documents'
          */
-        'tmp' => '/tmp/documents',
-    ],
-
-    /**
-     * Security related configuration
-     */
-    'security' => [
-
-        /**
-         * Policy class extending mindtwo\DocumentGenerator\Security\DocumentPolicy.
-         *
-         * Default: 'null'
-         */
-        'policy' => null,
-
-        /**
-         * Middleware stack to use for document routes.
-         */
-        'admin_middleware' => 'web',
-        'download_middleware' => 'web',
+        'tmp_path' => '/tmp/documents',
     ],
 
     /**
@@ -78,21 +67,5 @@ return [
             'Documents/Placeholders',
         ],
 
-    ],
-
-    /**
-     * Document block template related
-     */
-    'templates' => [
-
-        /**
-         * Template roots used to discover
-         * templates for our blocks
-         *
-         * Default: 'resource_path('views/documents')'
-         */
-        'roots' => [
-            resource_path('views/documents'),
-        ],
     ],
 ];

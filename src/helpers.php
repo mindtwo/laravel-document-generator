@@ -1,5 +1,7 @@
 <?php
 
+// TODO add document helper
+
 if (! function_exists('rsearch')) {
     /**
      * List all files in folder and sub folders using glob
