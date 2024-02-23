@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  *
  * @property-read bool $hasContent
  * @property-read bool $isSavedToDisk
+ * @property-read ?string $full_path
  * @property-read Document $instance
  *
  */
