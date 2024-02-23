@@ -12,7 +12,7 @@ interface FileCreator
      * @param GeneratedDocument $generatedDocument
      * @param string|null $downloadName
      * @param bool $inline
-     * @return void
+     * @return mixed
      */
     public function download(GeneratedDocument $generatedDocument, ?string $downloadName = null, bool $inline = false);
 

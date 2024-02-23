@@ -2,7 +2,7 @@
 
 namespace mindtwo\DocumentGenerator\Modules\Placeholder\Contracts;
 
-use Illuminate\Support\Stringable;
+use Stringable;
 
 interface HasFake
 {

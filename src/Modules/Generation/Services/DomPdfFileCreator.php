@@ -4,7 +4,6 @@ namespace mindtwo\DocumentGenerator\Modules\Generation\Services;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Illuminate\Support\Facades\Storage;
 use mindtwo\DocumentGenerator\Modules\Document\Document;
 use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
 use mindtwo\DocumentGenerator\Modules\Generation\Contracts\FileCreator;
@@ -23,14 +22,13 @@ class DomPdfFileCreator implements FileCreator
         $dompdf = $this->getDompdf($options, $generatedDocument, $document);
 
         // get the download name
-        $downloadName = $downloadName ?? 'document.pdf';
+        $downloadName = $downloadName ?? $document->fileName() ?? 'document.pdf';
         if (! str_ends_with($downloadName, '.pdf')) {
             $downloadName .= '.pdf';
         }
 
-        // TODO inline
         $dompdf->stream($downloadName ?? 'document.pdf', [
-            'Attachment' => false,
+            'Content-Disposition' => ($inline ? 'inline' : 'attachment')."; filename={$generatedDocument->file_name}",
         ]);
         exit(0);
     }
@@ -61,7 +59,7 @@ class DomPdfFileCreator implements FileCreator
             })->afterResponse();
         }
 
-        Storage::disk($generatedDocument->disk)->put("$file_path/$file_name", $file);
+        $generatedDocument->diskInstance()->put("$file_path/$file_name", $file);
     }
 
     protected function getDompdf(Options $options, GeneratedDocument $generatedDocument, Document $document): Dompdf

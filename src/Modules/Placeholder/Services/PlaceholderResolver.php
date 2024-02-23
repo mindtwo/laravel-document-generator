@@ -2,6 +2,7 @@
 
 namespace mindtwo\DocumentGenerator\Modules\Placeholder\Services;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use mindtwo\DocumentGenerator\Modules\Placeholder\Contracts\Placeholder;
 
@@ -17,7 +18,7 @@ class PlaceholderResolver
     /**
      * Discovered/Registered placeholders
      *
-     * @var array
+     * @var array<string, Placeholder>
      */
     private $placeholders = [];
 
@@ -32,99 +33,68 @@ class PlaceholderResolver
         $this->loadPlaceholders($placeholders);
     }
 
-    // /**
-    //  * Resolve values for all placeholders in array
-    //  * for given model attached to document
-    //  *
-    //  * @param  array  $placeholders
-    //  * @param  Model  $model
-    //  * @param  Document  $document
-    //  * @return array
-    //  */
-    // public function resolveAll(array $placeholders, Model $model): array
-    // {
-    //     $resolved = [];
+    /**
+     * Resolve values for all placeholders in array
+     * for given model attached to document
+     *
+     * @param  array  $placeholders
+     * @param  Model  $model
+     * @return array
+     */
+    public function resolveAll(array $placeholders, Model $model): array
+    {
+        $resolved = [];
 
-    //     foreach ($placeholders as $placeholder) {
-    //         $resolved[$placeholder] = $this->resolve($placeholder, $model);
-    //     }
+        foreach ($placeholders as $placeholder) {
+            $resolved[$placeholder] = $this->resolve($placeholder, $model);
+        }
 
-    //     return $resolved;
-    // }
+        return $resolved;
+    }
 
-    // /**
-    //  * Resolve all placeholders for a given layout.
-    //  *
-    //  * @param  Layout  $layout
-    //  * @param  Document  $document
-    //  * @return array
-    //  */
-    // public function resolveLayout(Layout $layout, Document $document): array
-    // {
-    //     $resolved = [];
+    /**
+     * Resolve a value for a placeholder by its name for the model
+     * attached to document
+     *
+     * @param  string  $placeholderName
+     * @param  Model  $model
+     * @return ?string
+     */
+    public function resolve(string $placeholderName, Model $model): ?string
+    {
+        if (isset($this->placeholders[$placeholderName])) {
+            $value = $this->placeholders[$placeholderName]->resolve($model);
 
-    //     foreach ($layout->placeholder() as $placeholder) {
-    //         $resolved[$placeholder] = $this->resolve($placeholder, $document->getModel(), $document);
-    //     }
+            return $value;
+        }
 
-    //     return $resolved;
-    // }
+        $expl = explode('.', $placeholderName);
 
-    // /**
-    //  * Resolve a value for a placeholder by its name for the model
-    //  * attached to document
-    //  *
-    //  * @param  string  $placeholderName
-    //  * @param  Model  $model
-    //  * @param  null|Document  $document
-    //  * @return Field
-    //  */
-    // public function resolve(string $placeholderName, Model $model, ?Document $document = null): Field
-    // {
-    //     if (isset($this->placeholders[$placeholderName])) {
-    //         $value = $this->placeholders[$placeholderName]->resolve($model, $this->getResolveContext(), $document);
+        if (count($expl) > 1) {
+            $class = Str::title($expl[0]);
 
-    //         return new Field($placeholderName, $value);
-    //     }
+            // check if the placeholder starts with model::class with lowercase first letter
+            if ($class !== $model::class) {
+                throw new \Exception("$class does not match the model the document is generated for", 1);
+            }
 
-    //     // if (is_null($document)) {
-    //     //     return new Field($placeholderName, null);
-    //     // }
+            array_shift($expl);
 
-    //     $expl = explode('.', $placeholderName);
+            // try to retrieve the value from model
+            $value = $model;
+            foreach ($expl as $part) {
+                if (isset($value->{$part})) {
+                    $value = $value->{$part};
+                }
+            }
 
-    //     $model = $document->getModel();
-    //     if (count($expl) > 1) {
-    //         $class = Str::title($expl[0]);
+            if (isset($value)) {
+                return $value;
+            }
+        }
 
-    //         // check if the placeholder starts with model::class with lowercase first letter
-    //         if ($class !== $model::class) {
-    //             throw new \Exception("$class does not match the model the document is generated for", 1);
-    //         }
-
-    //         array_shift($expl);
-
-    //         // try to retrieve the value from model
-    //         $value = $model;
-    //         foreach ($expl as $part) {
-    //             if (isset($value->{$part})) {
-    //                 $value = $value->{$part};
-    //             }
-    //         }
-
-    //         if (isset($value)) {
-    //             return new Field($placeholderName, $value);
-    //         }
-    //     }
-
-    //     // throw new \Exception("No Placeholder found for with the name $placeholderName", 1);
-    //     return new Field($placeholderName, null);
-    // }
-
-    // public function get(string $name): Placeholder
-    // {
-    //     return $this->placeholders[$name];
-    // }
+        return null;
+    }
 
     /**
      * Register a placeholder for a given name

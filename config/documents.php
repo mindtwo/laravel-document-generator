@@ -61,10 +61,10 @@ return [
          * Auto discover paths for Placeholder
          * classes without leading slash
          *
-         * Default: 'Documents/Placeholders'
+         * Default: 'Documents/Placeholder'
          */
         'auto_discover' => [
-            'Documents/Placeholders',
+            'Documents/Placeholder',
         ],
 
     ],

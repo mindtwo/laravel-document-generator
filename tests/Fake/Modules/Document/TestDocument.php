@@ -2,6 +2,7 @@
 
 namespace Tests\Fake\Modules\Document;
 
+use BladeLayout;
 use Illuminate\Database\Eloquent\Model;
 
 class TestDocument extends \mindtwo\DocumentGenerator\Modules\Document\Document
@@ -13,6 +14,11 @@ class TestDocument extends \mindtwo\DocumentGenerator\Modules\Document\Document
 
     protected ?string $fileNameGenerator = \Tests\Fake\Modules\Document\TestFileNameGenerator::class;
 
+
+    public function layout(): BladeLayout
+    {
+        return new BladeLayout('test');
+    }
 
     /**
      * Get the file path generator class.

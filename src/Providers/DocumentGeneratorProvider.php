@@ -7,12 +7,10 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldGenerateEvent;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
-use mindtwo\DocumentGenerator\Modules\Generation\Listeners\DocumentShouldGenerateListener;
+use mindtwo\DocumentGenerator\Modules\Content\Listeners\DocumentShouldGenerateListener;
 use mindtwo\DocumentGenerator\Modules\Generation\Listeners\DocumentShouldSaveListener;
 use mindtwo\DocumentGenerator\Modules\Placeholder\Services\PlaceholderResolver;
-use mindtwo\DocumentGenerator\Services\BlockRenderer;
-use mindtwo\DocumentGenerator\Services\BlockTemplateResolver;
-use mindtwo\DocumentGenerator\Services\DocumentGenerator;
+use mindtwo\DocumentGenerator\Services\DocumentService;
 
 class DocumentGeneratorProvider extends ServiceProvider
 {
@@ -51,25 +49,9 @@ class DocumentGeneratorProvider extends ServiceProvider
             return new PlaceholderResolver(config('documents'), $this->placeholder);
         });
 
-        // $this->app->singleton(BlockTemplateResolver::class, function (Application $app) {
-        //     return new BlockTemplateResolver(config('documents'));
-        // });
-
-        // $this->app->bind(BlockRenderer::class, function (Application $app) {
-        //     $placeholderResolver = $app->make(PlaceholderResolver::class);
-
-        //     $blockTemplateResolver = $app->make(BlockTemplateResolver::class);
-
-        //     return new BlockRenderer($blockTemplateResolver, $placeholderResolver);
-        // });
-
-        // $this->app->bind(DocumentGenerator::class, function (Application $app) {
-        //     $disk = $this->getDiskInstance();
-
-        //     $blockRenderer = $app->make(BlockRenderer::class);
-
-        //     return new DocumentGenerator($disk, $blockRenderer);
-        // });
+        $this->app->bind('document', function (Application $app) {
+            return new DocumentService();
+        });
     }
 
     /**

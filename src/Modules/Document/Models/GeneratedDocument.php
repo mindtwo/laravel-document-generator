@@ -2,6 +2,7 @@
 
 namespace mindtwo\DocumentGenerator\Modules\Document\Models;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -9,6 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use mindtwo\DocumentGenerator\Modules\Document\Document;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
+use mindtwo\DocumentGenerator\Modules\Generation\Factory\FileCreatorFactory;
 use mindtwo\LaravelAutoCreateUuid\AutoCreateUuid;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -22,21 +24,18 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  * @property ?string $disk
  * @property ?string $file_name
  * @property ?string $file_path
- * @property ?array $resolved_placeholders
+ * @property ?array $resolved_placeholder
  * @property ?array $extra
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
- *
  * @property-read bool $hasContent
  * @property-read bool $isSavedToDisk
  * @property-read ?string $full_path
  * @property-read Document $instance
- *
  */
 class GeneratedDocument extends Model
 {
-
     use AutoCreateUuid;
 
     /**
@@ -54,7 +53,7 @@ class GeneratedDocument extends Model
      * @var array
      */
     protected $casts = [
-        'resolved_placeholders' => 'array',
+        'resolved_placeholder' => 'array',
         'extra' => 'array',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -68,14 +67,14 @@ class GeneratedDocument extends Model
                 return null;
             }
 
-            return $this->file_path . '/' . $this->file_name;
+            return $this->file_path.'/'.$this->file_name;
         });
     }
 
     public function hasContent(): Attribute
     {
         return Attribute::make(function () {
-            return !empty($this->content);
+            return ! empty($this->content);
         });
     }
 
@@ -87,7 +86,7 @@ class GeneratedDocument extends Model
     public function isSavedToDisk(): Attribute
     {
         return Attribute::make(function () {
-            return !empty($this->disk) && ! empty($this->full_path);
+            return ! empty($this->disk) && ! empty($this->full_path);
         });
     }
 
@@ -109,8 +108,6 @@ class GeneratedDocument extends Model
 
     /**
      * Save the document to disk.
-     *
-     * @param string|null $disk
      */
     public function saveToDisk(?string $disk = null): void
     {
@@ -128,15 +125,26 @@ class GeneratedDocument extends Model
      */
     public function download(bool $inline = false): StreamedResponse
     {
-        if ($this->is_saved_to_disk) {
-            $diskInstance = Storage::disk($this->disk);
+        if (! $this->has_content) {
+            return response()->noContent(404);
+        }
 
-            return $diskInstance->download($this->full_path, $this->file_name, [
-                "Content-Disposition" => ($inline ? 'inline' : 'attachment') . "; filename={$this->file_name}",
+        if ($this->is_saved_to_disk) {
+            return $this->diskInstance()->download($this->full_path, $this->file_name, [
+                'Content-Disposition' => ($inline ? 'inline' : 'attachment')."; filename={$this->file_name}",
             ]);
         }
 
-        // TODO use filecreator download
+        $fileCreator = FileCreatorFactory::make($this);
+        return $fileCreator->download($this, null, $inline);
+    }
+
+    /**
+     * Get disk instance where file is stored.
+     */
+    public function diskInstance(): Filesystem
+    {
+        return Storage::disk($this->disk);
     }
 
     /**

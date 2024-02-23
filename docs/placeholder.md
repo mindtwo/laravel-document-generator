@@ -1,6 +1,6 @@
 # Placeholder
 
-Inside your templates html strings you can specify **Placeholders** which will automatically be populated
+Inside your templates html strings you can specify **Placeholder** which will automatically be populated
 with the corresponding value on generation.
 
 ## Placeholder in templates

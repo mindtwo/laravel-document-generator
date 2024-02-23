@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ffe9b9d30ef7c54b11a881288eb1c485",
+    "content-hash": "764ceeef27d56525490347acb58826c0",
     "packages": [
         {
             "name": "brick/math",
@@ -1568,20 +1568,20 @@
         },
         {
             "name": "mindtwo/laravel-auto-create-uuid",
-            "version": "2.6.1",
+            "version": "2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mindtwo/laravel-auto-create-uuid.git",
-                "reference": "5923df040f723fdcdb64220c05c12b05b01ecded"
+                "reference": "53eebbf0561ef0c70749581ea5e6f7bbe2a222dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mindtwo/laravel-auto-create-uuid/zipball/5923df040f723fdcdb64220c05c12b05b01ecded",
-                "reference": "5923df040f723fdcdb64220c05c12b05b01ecded",
+                "url": "https://api.github.com/repos/mindtwo/laravel-auto-create-uuid/zipball/53eebbf0561ef0c70749581ea5e6f7bbe2a222dd",
+                "reference": "53eebbf0561ef0c70749581ea5e6f7bbe2a222dd",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^7.4|^8.0|^9.0|^10.0",
+                "illuminate/support": "^7.4|^8.0|^9.0|^10.0|^11.0",
                 "php": "^7.0|^8.0|^8.1"
             },
             "require-dev": {
@@ -1609,9 +1609,9 @@
             "description": "Laravel Auto Create UUID",
             "support": {
                 "issues": "https://github.com/mindtwo/laravel-auto-create-uuid/issues",
-                "source": "https://github.com/mindtwo/laravel-auto-create-uuid/tree/2.6.1"
+                "source": "https://github.com/mindtwo/laravel-auto-create-uuid/tree/2.6.2"
             },
-            "time": "2023-05-12T08:34:49+00:00"
+            "time": "2024-02-23T15:18:17+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -7126,21 +7126,21 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.8.1",
+            "version": "1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "bc3dc91a5e9b14aa06d1d9e90647c5c5a2cc5353"
+                "reference": "153ae662783729388a584b4361f2545e4d841e3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/bc3dc91a5e9b14aa06d1d9e90647c5c5a2cc5353",
-                "reference": "bc3dc91a5e9b14aa06d1d9e90647c5c5a2cc5353",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/153ae662783729388a584b4361f2545e4d841e3c",
+                "reference": "153ae662783729388a584b4361f2545e4d841e3c",
                 "shasum": ""
             },
             "require": {
                 "doctrine/deprecations": "^1.0",
-                "php": "^7.4 || ^8.0",
+                "php": "^7.3 || ^8.0",
                 "phpdocumentor/reflection-common": "^2.0",
                 "phpstan/phpdoc-parser": "^1.13"
             },
@@ -7178,9 +7178,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.8.1"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.8.2"
             },
-            "time": "2024-01-18T19:15:27+00:00"
+            "time": "2024-02-23T11:10:43+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",

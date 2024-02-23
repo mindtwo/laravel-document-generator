@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('file_name')->nullable();
             $table->string('file_path')->nullable();
 
-            $table->json('resolved_placeholders')->nullable();
+            $table->json('resolved_placeholder')->nullable();
             $table->json('extra')->nullable();
 
             // timestamps

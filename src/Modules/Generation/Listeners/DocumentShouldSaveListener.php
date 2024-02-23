@@ -5,8 +5,7 @@ namespace mindtwo\DocumentGenerator\Modules\Generation\Listeners;
 use mindtwo\DocumentGenerator\Modules\Document\Document;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
 use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
-use mindtwo\DocumentGenerator\Modules\Generation\Contracts\FileCreator;
-use mindtwo\DocumentGenerator\Modules\Document\Contracts\SavedBy;
+use mindtwo\DocumentGenerator\Modules\Generation\Factory\FileCreatorFactory;
 
 class DocumentShouldSaveListener
 {
@@ -24,10 +23,7 @@ class DocumentShouldSaveListener
         $document = $generatedDocument->instance;
 
         // Get the file saver
-        $fileCreator = app()->make($document instanceof SavedBy ? $document->savedBy() : config('documents.file_creator'));
-        if (! $fileCreator instanceof FileCreator) {
-            throw new \Exception('File saver class not found');
-        }
+        $fileCreator = FileCreatorFactory::make($document);
 
         $this->updateGeneratedDocumentPath($generatedDocument, $document);
 
@@ -44,7 +40,7 @@ class DocumentShouldSaveListener
         $file_path = $document->filePath();
 
         // Add the root path to the file path
-        $file_path = rtrim(config('documents.files.root_path'), '/') . "/$file_path";
+        $file_path = rtrim(config('documents.files.root_path'), '/')."/$file_path";
 
         $generatedDocument->file_path = $file_path;
         $generatedDocument->file_name = $file_name;

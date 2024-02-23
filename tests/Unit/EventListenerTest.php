@@ -9,7 +9,7 @@ it('registers listners for the document events', function () {
 
     Event::assertListening(
         \mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldGenerateEvent::class,
-        \mindtwo\DocumentGenerator\Modules\Generation\Listeners\DocumentShouldGenerateListener::class
+        \mindtwo\DocumentGenerator\Modules\Content\Listeners\DocumentShouldGenerateListener::class,
     );
 
     Event::assertListening(

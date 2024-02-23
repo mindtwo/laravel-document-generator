@@ -2,6 +2,7 @@
 
 namespace mindtwo\DocumentGenerator\Modules\Document\Concerns;
 
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
 
 trait HasDocument
@@ -12,7 +13,7 @@ trait HasDocument
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function generatedDocument()
+    public function generatedDocument(): MorphOne
     {
         return $this->morphOne(GeneratedDocument::class, 'documentable');
     }

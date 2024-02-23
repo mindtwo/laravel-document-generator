@@ -2,9 +2,10 @@
 
 namespace mindtwo\DocumentGenerator\Modules\Placeholder\Contracts;
 
-use Illuminate\Support\Stringable;
+use Illuminate\Database\Eloquent\Model;
+use Stringable;
 
 interface Placeholder
 {
-    public function resolve(): null|string|Stringable;
+    public function resolve(Model $model): null|string|Stringable;
 }

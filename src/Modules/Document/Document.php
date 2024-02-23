@@ -3,6 +3,8 @@
 namespace mindtwo\DocumentGenerator\Modules\Document;
 
 use Illuminate\Database\Eloquent\Model;
+use mindtwo\DocumentGenerator\Modules\Content\Blocks\Block;
+use mindtwo\DocumentGenerator\Modules\Content\Layouts\BladeLayout;
 use mindtwo\DocumentGenerator\Modules\Document\Enums\DocumentOrientation;
 use mindtwo\DocumentGenerator\Modules\Document\Enums\DocumentWidth;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldGenerateEvent;
@@ -23,13 +25,13 @@ abstract class Document
     protected ?string $fileNameGenerator = null;
 
     /**
-     * The finalized placeholders.
-     * Add placeholder names of placeholders that should not be changed,
+     * The finalized placeholder.
+     * Add placeholder names that should not be changed,
      * if the document and the blocks are regenerated.
      *
      * @var array
      */
-    protected array $finalizedPlaceholders = [];
+    protected array $finalizedPlaceholder = [];
 
     /**
      * Documents orientation.
@@ -53,8 +55,12 @@ abstract class Document
 
     /**
      * Get the blocks in order to render in the document.
+     *
+     * @return array<Block>
      */
     abstract public function blocks(): array;
+
+    abstract public function layout(): BladeLayout;
 
     /**
      * Get the file path generator class.
@@ -111,12 +117,17 @@ abstract class Document
         return $this->documentOrientation->value;
     }
 
-    /**
-     * Get the finalized placeholders.
-     */
-    public function getFinalizedPlaceholders(): array
+    public function getDocumentOrientation(): DocumentOrientation
     {
-        return $this->finalizedPlaceholders;
+        return $this->documentOrientation;
+    }
+
+    /**
+     * Get the finalized placeholder.
+     */
+    public function getFinalizedPlaceholder(): array
+    {
+        return $this->finalizedPlaceholder;
     }
 
     /**

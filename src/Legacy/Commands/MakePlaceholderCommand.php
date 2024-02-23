@@ -39,7 +39,7 @@ class MakePlaceholderCommand extends Command
 
         $config = config('documents');
 
-        $placeholderPath = 'Documents/Placeholders';
+        $placeholderPath = 'Documents/Placeholder';
         if (isset($config['placeholder']) && isset($config['placeholder']['auto_discover'])) {
             $placeholderPath = $config['placeholder']['auto_discover'][0];
         }
