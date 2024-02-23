@@ -36,6 +36,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class GeneratedDocument extends Model
 {
+
+    // TODO delete file on delete
+
     use AutoCreateUuid;
 
     /**
