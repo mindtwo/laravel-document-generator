@@ -138,6 +138,11 @@ class GeneratedDocument extends Model
     {
         if ($this->is_saved_to_disk) {
             $this->diskInstance()->delete($this->full_path);
+
+            $this->update([
+                'file_path' => null,
+                'file_name' => null,
+            ]);
         }
     }
 
