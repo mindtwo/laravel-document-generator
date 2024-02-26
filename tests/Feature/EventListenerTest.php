@@ -18,6 +18,18 @@ it('registers listners for the document events', function () {
     );
 });
 
+it('generates the content when the document is created', function () {
+    $model = \Tests\Fake\Models\TestModel::create([
+        'id' => 1,
+        'title' => 'Test Title',
+    ]);
+
+    $doc = new TestDocument($model);
+    $generated = $doc->generate();
+
+    expect($generated->content)->not->toBeNull();
+});
+
 it('updates the document instance and generates a file', function () {
     $storage = Storage::fake('local');
 
