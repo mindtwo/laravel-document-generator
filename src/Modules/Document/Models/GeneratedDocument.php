@@ -45,7 +45,7 @@ class GeneratedDocument extends Model
         parent::boot();
 
         static::deleted(function (GeneratedDocument $document) {
-            $this->deleteDocumentFile();
+            $document->deleteDocumentFile();
         });
     }
 
