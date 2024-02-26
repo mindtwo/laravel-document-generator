@@ -3,10 +3,25 @@
 namespace mindtwo\DocumentGenerator\Modules\Document\Concerns;
 
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use mindtwo\DocumentGenerator\Modules\Document\Contracts\HasDocument as ContractsHasDocument;
 use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 trait HasDocument
 {
+
+    public static function bootHasDocument()
+    {
+        static::deleting(function (ContractsHasDocument $model) {
+            if (in_array(SoftDeletes::class, class_uses_recursive($model))) {
+                if (! $model->forceDeleting) {
+                    return;
+                }
+            }
+
+            $model->generatedDocument()->delete();
+        });
+    }
 
     /**
      * Get the document

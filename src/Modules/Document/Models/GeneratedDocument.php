@@ -6,6 +6,7 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use mindtwo\DocumentGenerator\Modules\Document\Document;
@@ -37,9 +38,18 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class GeneratedDocument extends Model
 {
 
-    // TODO delete file on delete
-
     use AutoCreateUuid;
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function (GeneratedDocument $document) {
+            if ($document->is_saved_to_disk) {
+                $document->diskInstance()->delete($document->full_path);
+            }
+        });
+    }
 
     /**
      * The table associated with the model.
@@ -126,7 +136,7 @@ class GeneratedDocument extends Model
     /**
      * Download the document.
      */
-    public function download(bool $inline = false): StreamedResponse
+    public function download(bool $inline = false): StreamedResponse|Response
     {
         if (! $this->has_content) {
             return response()->noContent(404);
