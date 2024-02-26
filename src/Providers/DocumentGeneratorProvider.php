@@ -28,12 +28,14 @@ class DocumentGeneratorProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../../config/documents.php' => config_path('documents.php'),
             ], 'documents');
+
+            $this->publishes([
+                __DIR__.'/../../database/migrations-v2/create_generated_documents_table.php' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_generated_documents_table.php'),
+            ], ['migrations', 'documents']);
         }
 
         Event::listen(DocumentShouldGenerateEvent::class, DocumentShouldGenerateListener::class);
         Event::listen(DocumentShouldSaveToDiskEvent::class, DocumentShouldSaveListener::class);
-
-        $this->loadMigrationsFrom($this->getMigrationsPath());
     }
 
     /**
@@ -52,14 +54,5 @@ class DocumentGeneratorProvider extends ServiceProvider
         $this->app->bind('document', function (Application $app) {
             return new DocumentService();
         });
-    }
-
-    /**
-     * Get our migration paths
-     */
-    private function getMigrationsPath(): array
-    {
-        return is_array(config('documents.migrations_path')) ?
-            config('documents.migrations_path') : [config('documents.migrations_path')];
     }
 }

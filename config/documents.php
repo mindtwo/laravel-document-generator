@@ -3,12 +3,8 @@
 return [
 
     /**
-     * Path where the document migrations are located
-     *
-     * Default: 'database_path('documents')'
+     * Default document generator class used to generate the document.
      */
-    'migrations_path' => database_path('documents'),
-
     'file_creator' => \mindtwo\DocumentGenerator\Modules\Generation\Services\DomPdfFileCreator::class,
 
     /**
