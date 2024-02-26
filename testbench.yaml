@@ -1,0 +1,2 @@
+providers:
+  - mindtwo\DocumentGenerator\Providers\DocumentGeneratorProvider

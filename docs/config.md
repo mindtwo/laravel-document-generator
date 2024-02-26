@@ -13,7 +13,7 @@ Path where the plugin will look for the document migrations.
 
 ## Placeholder
 
-Inside the **placeholder** section you can configure how the package handles *placeholders* and their *resolving*.
+Inside the **placeholder** section you can configure how the package handles *placeholder* and their *resolving*.
 
 - key: "placeholder"
 
@@ -22,7 +22,7 @@ Inside the **placeholder** section you can configure how the package handles *pl
 Specifies an array where the package searches for classes that extend `mindtwo\DocumentGenerator\Document\Placeholder`
 
 - key: "placeholder.auto_discover"
-- default: `['Documents/Placeholders']`
+- default: `['Documents/Placeholder']`
 
 ## Blocks
 

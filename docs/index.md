@@ -3,6 +3,7 @@
 ## Installation
 
 - [Get started](/{{version}}/get-started)
+- [Installation](/{{version}}/install)
 - [Your first document](/{{version}}/first-document)
 
 ## Configuration

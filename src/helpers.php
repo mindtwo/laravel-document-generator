@@ -1,11 +1,22 @@
 <?php
 
+use Illuminate\Database\Eloquent\Model;
+
+if (! function_exists('document')) {
+    function document(?Model $model = null, ?string $documentClass = null): \mindtwo\DocumentGenerator\Services\DocumentService
+    {
+        if (isset($model) && $documentClass) {
+            return app('document')->firstOrGenerate($model, $documentClass);
+        }
+
+        return app('document');
+    }
+}
+
 if (! function_exists('rsearch')) {
     /**
      * List all files in folder and sub folders using glob
      *
-     * @param  string  $folder
-     * @param  string  $regPattern
      * @return array
      */
     function rsearch(string $folder, string $regPattern)
