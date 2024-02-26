@@ -45,9 +45,7 @@ class GeneratedDocument extends Model
         parent::boot();
 
         static::deleted(function (GeneratedDocument $document) {
-            if ($document->is_saved_to_disk) {
-                $document->diskInstance()->delete($document->full_path);
-            }
+            $this->deleteDocumentFile();
         });
     }
 
@@ -122,15 +120,25 @@ class GeneratedDocument extends Model
     /**
      * Save the document to disk.
      */
-    public function saveToDisk(?string $disk = null): void
+    public function saveToDisk(?string $disk = null, bool $force = false): void
     {
-        if ($this->is_saved_to_disk) {
+        if ($this->is_saved_to_disk && ! $force) {
             return;
         }
 
         $this->disk = $disk ?? config('documents.files.default_disk');
 
         DocumentShouldSaveToDiskEvent::dispatch($this);
+    }
+
+    /**
+     * Delete the document file.
+     */
+    public function deleteDocumentFile(): void
+    {
+        if ($this->is_saved_to_disk) {
+            $this->diskInstance()->delete($this->full_path);
+        }
     }
 
     /**

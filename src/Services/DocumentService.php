@@ -65,7 +65,7 @@ class DocumentService
     {
         $this->generatedDocument = $generatedDocument;
 
-        return $this->recreate($generatedDocument->model, $generatedDocument->document_class);
+        return $this->recreateForModel($generatedDocument->model, $generatedDocument->document_class);
     }
 
     /**
@@ -97,6 +97,8 @@ class DocumentService
         $this->generatedDocument->update([
             'content' => $documentContent->html(),
         ]);
+
+        $this->generatedDocument->saveToDisk(null, true);
 
         return $this;
     }
