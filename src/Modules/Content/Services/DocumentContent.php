@@ -53,7 +53,9 @@ class DocumentContent
 
         // get all remaining placeholder
         $remainingPlaceholder = array_values(array_diff($placeholder, array_keys($finalizedPlaceholder)));
-        return $this->placeholderResolver->resolveAll($remainingPlaceholder, $this->model);
+        $remainingResolved = $this->placeholderResolver->resolveAll($remainingPlaceholder, $this->model);
+
+        return array_merge($finalizedPlaceholder, $remainingResolved);
     }
 
     /**
@@ -68,7 +70,6 @@ class DocumentContent
         if (empty($generatedDocument->resolved_placeholder) || empty($this->document->getFinalizedPlaceholder())) {
             return [];
         }
-
         $finalizedPlaceholderNames = $this->document->getFinalizedPlaceholder();
 
         return array_intersect_key($generatedDocument->resolved_placeholder, array_flip($finalizedPlaceholderNames));
