@@ -4,7 +4,7 @@ namespace mindtwo\DocumentGenerator\Modules\Document;
 
 use Illuminate\Database\Eloquent\Model;
 use mindtwo\DocumentGenerator\Modules\Content\Blocks\Block;
-use mindtwo\DocumentGenerator\Modules\Content\Layouts\BladeLayout;
+use mindtwo\DocumentGenerator\Modules\Content\Layouts\Layout;
 use mindtwo\DocumentGenerator\Modules\Document\Enums\DocumentOrientation;
 use mindtwo\DocumentGenerator\Modules\Document\Enums\DocumentWidth;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldGenerateEvent;
@@ -60,7 +60,7 @@ abstract class Document
      */
     abstract public function blocks(): array;
 
-    abstract public function layout(): BladeLayout;
+    abstract public function layout(): Layout;
 
     /**
      * Get the file path generator class.
