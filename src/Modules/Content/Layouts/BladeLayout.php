@@ -64,9 +64,13 @@ class BladeLayout
 
     public function template(): string
     {
-        $templatePath = str_replace('.', '/', str_replace('.blade.php', '', $this->template));
+        try {
+            $templatePath = str_replace('.', '/', str_replace('.blade.php', '', $this->template));
 
-        return file_get_contents(resource_path('views/'.$templatePath.'.blade.php'));
+            return file_get_contents(resource_path('views/'.$templatePath.'.blade.php'));
+        } catch (\Throwable $th) {
+            return '';
+        }
     }
 
     /**

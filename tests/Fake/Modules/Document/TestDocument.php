@@ -2,8 +2,8 @@
 
 namespace Tests\Fake\Modules\Document;
 
-use BladeLayout;
 use Illuminate\Database\Eloquent\Model;
+use mindtwo\DocumentGenerator\Modules\Content\Layouts\BladeLayout;
 
 class TestDocument extends \mindtwo\DocumentGenerator\Modules\Document\Document
 {
