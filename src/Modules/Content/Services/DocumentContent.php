@@ -15,11 +15,10 @@ class DocumentContent
         protected Document $document,
         protected Model $model,
     ) {
-
         $this->placeholderResolver = app(PlaceholderResolver::class);
     }
 
-    public function html(): string
+    public function html(): array
     {
         // get all blocks for document
         $blocks = $this->document->blocks();
@@ -34,7 +33,7 @@ class DocumentContent
             $content .= $block->render($resolved);
         }
 
-        return $this->document->layout()->render($this->document, $this->model, $content);
+        return [$resolved, $this->document->layout()->render($this->document, $this->model, $content)];
     }
 
     /**

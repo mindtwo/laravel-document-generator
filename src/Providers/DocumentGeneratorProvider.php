@@ -32,6 +32,10 @@ class DocumentGeneratorProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../../database/migrations-v2/create_generated_documents_table.php' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_generated_documents_table.php'),
             ], ['migrations', 'documents']);
+
+            $this->commands([
+                \mindtwo\DocumentGenerator\Modules\Console\Commands\GenerateMissingDocumentsCommand::class,
+            ]);
         }
 
         Event::listen(DocumentShouldGenerateEvent::class, DocumentShouldGenerateListener::class);

@@ -19,7 +19,7 @@ class DocumentShouldGenerateListener
     {
         $generatedDocument = $event->document;
 
-        if ($generatedDocument->content) {
+        if ($generatedDocument->has_content) {
             return;
         }
 
@@ -28,10 +28,12 @@ class DocumentShouldGenerateListener
             $generatedDocument->model
         );
 
+        list($resolved, $content) = $documentContent->html();
+
         $generatedDocument->update([
-            'content' => $documentContent->html(),
+            'resolved_placeholder' => $resolved,
+            'content' => $content,
         ]);
     }
-
 
 }
