@@ -51,7 +51,6 @@ class DocumentService
         }
 
         $this->generatedDocument = $document->generate();
-
         return $this;
     }
 
@@ -94,8 +93,11 @@ class DocumentService
             $model
         );
 
+        list($resolved, $content) = $documentContent->html();
+
         $this->generatedDocument->update([
-            'content' => $documentContent->html(),
+            'resolved_placeholder' => $resolved,
+            'content' => $content,
         ]);
 
         $this->generatedDocument->saveToDisk(null, true);
