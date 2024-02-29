@@ -16,7 +16,7 @@ class GenerateMissingDocumentsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'documents:generate-missing {document : Alias or document class that indicates the type we want to recreate} {--force : Force recreation of all documents} {--dry-run : Do not recreate documents} {--exclude-id=* : Ids we want to exclude from generation}';
+    protected $signature = 'documents:generate-missing {document : Alias or document class that indicates the type we want to recreate} {--force : Force recreation of all documents} {--dry-run : Do not recreate documents} {--id=* : Ids of models to recreate the documents for.} {--exclude-id=* : Ids we want to exclude from generation}';
 
     /**
      * The console command description.
@@ -71,6 +71,14 @@ class GenerateMissingDocumentsCommand extends Command
     {
         $eligibleModels = $documentClass::getEligibleModels($documentClass);
 
+        return $this->filterEligibleModels($eligibleModels, $documentClass);
+
+
+
+    }
+
+    private function filterEligibleModels(Collection $eligibleModels, string $documentClass): Collection
+    {
         if ($eligibleModels->isEmpty() || $this->option('force')) {
             return $eligibleModels;
         }
@@ -84,9 +92,18 @@ class GenerateMissingDocumentsCommand extends Command
             ->pluck('documentable_id');
 
         $excludedIds = $this->option('exclude-id') ?? [];
+        $ids = $this->option('id') ?? [];
 
-        return $eligibleModels->filter(function (Model $model) use ($existingDocuments, $excludedIds) {
-            return ! $existingDocuments->contains($model->id) && ! in_array($model->id, $excludedIds);
+        return $eligibleModels->filter(function (Model $model) use ($existingDocuments, $excludedIds, $ids) {
+            if (! empty($ids) && ! in_array($model->id, $ids)) {
+                return false;
+            }
+
+            if (! empty($excludedIds) && in_array($model->id, $excludedIds)) {
+                return false;
+            }
+
+            return ! $existingDocuments->contains($model->id);
         });
     }
 
