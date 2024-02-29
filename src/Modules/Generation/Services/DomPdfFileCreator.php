@@ -50,13 +50,11 @@ class DomPdfFileCreator implements FileCreator
         $file = $dompdf->output();
 
         if (! str_ends_with($file_name, '.pdf')) {
-            $file_name .= '.pdf';
+            $file_name = "$file_name.pdf";
 
-            dispatch(function () use ($generatedDocument, $file_name) {
-                $generatedDocument->update([
-                    'file_name' => $file_name,
-                ]);
-            })->afterResponse();
+            $generatedDocument->update([
+                'file_name' => $file_name,
+            ]);
         }
 
         $generatedDocument->diskInstance()->put("$file_path/$file_name", $file);
