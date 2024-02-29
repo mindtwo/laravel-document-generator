@@ -16,7 +16,7 @@ class GenerateMissingDocumentsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'documents:generate-missing {document : Alias or document class that indicates the type we want to recreate} {--force : Force recreation of all documents} {--dry-run : Do not recreate documents}';
+    protected $signature = 'documents:generate-missing {document : Alias or document class that indicates the type we want to recreate} {--force : Force recreation of all documents} {--dry-run : Do not recreate documents} {--exclude-id=* : Ids we want to exclude from generation}';
 
     /**
      * The console command description.
@@ -48,6 +48,7 @@ class GenerateMissingDocumentsCommand extends Command
         }
 
         $this->info(sprintf('Found %d models with missing documents for %s.', count($missingDocuments), $documentClass));
+        $this->info(sprintf('Generating documents for model with ids: %s.', $missingDocuments->pluck('id')->join(', ')), 'vv');
 
         if ($this->option('dry-run')) {
             $this->info('Dry run, no documents will be generated.');
@@ -82,8 +83,10 @@ class GenerateMissingDocumentsCommand extends Command
             ->get()
             ->pluck('documentable_id');
 
-        return $eligibleModels->filter(function (Model $model) use ($existingDocuments) {
-            return ! $existingDocuments->contains($model->id);
+        $excludedIds = $this->option('exclude-id') ?? [];
+
+        return $eligibleModels->filter(function (Model $model) use ($existingDocuments, $excludedIds) {
+            return ! $existingDocuments->contains($model->id) && ! in_array($model->id, $excludedIds);
         });
     }
 
