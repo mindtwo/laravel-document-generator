@@ -38,7 +38,7 @@ abstract class Document
      *
      * @var DocumentOrientation
      */
-    protected $documentOrientation = DocumentOrientation::Landscape;
+    protected $documentOrientation = DocumentOrientation::Portrait;
 
     /**
      * Documents orientation.
