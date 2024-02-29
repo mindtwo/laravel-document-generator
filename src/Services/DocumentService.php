@@ -13,6 +13,11 @@ class DocumentService
     // TODO implement fake
     private ?GeneratedDocument $generatedDocument = null;
 
+    public function getGeneratedDocument(): ?GeneratedDocument
+    {
+        return $this->generatedDocument;
+    }
+
     /**
      * Generate document
      *

@@ -5,6 +5,7 @@ namespace mindtwo\DocumentGenerator\Modules\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use mindtwo\DocumentGenerator\Modules\Console\Events\MissingDocumentsCreatedEvent;
 use mindtwo\DocumentGenerator\Modules\Document\Contracts\Commandable;
 use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
 use Symfony\Component\Console\Command\Command as ConsoleCommand;
@@ -56,10 +57,19 @@ class GenerateMissingDocumentsCommand extends Command
             return ConsoleCommand::SUCCESS;
         }
 
+        $createdDocuments = collect([]);
+
         // generate documents
-        $missingDocuments->each(function (Model $model) use ($documentClass) {
-            document($model, $documentClass)->saveToDisk();
+        $missingDocuments->each(function (Model $model) use ($documentClass, $createdDocuments) {
+            $document = document($model, $documentClass);
+            $document->saveToDisk();
+
+            $createdDocuments->push($document->getGeneratedDocument());
         });
+
+        $this->info('Documents generated successfully.', 'vv');
+
+        MissingDocumentsCreatedEvent::dispatch($documentClass, $createdDocuments);
 
         return ConsoleCommand::SUCCESS;
     }
