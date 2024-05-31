@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
  * @property-read bool $hasContent
+ * @property-read bool $hasDocumentClass
  * @property-read bool $isSavedToDisk
  * @property-read ?string $full_path
  * @property-read Document $instance
@@ -82,6 +83,13 @@ class GeneratedDocument extends Model
         });
     }
 
+    public function hasDocumentClass(): Attribute
+    {
+        return Attribute::make(function () {
+            return $this->document_class && class_exists($this->document_class);
+        });
+    }
+
     public function hasContent(): Attribute
     {
         return Attribute::make(function () {
@@ -109,7 +117,7 @@ class GeneratedDocument extends Model
     public function instance(): Attribute
     {
         return Attribute::make(function () {
-            if (! $this->document_class || ! class_exists($this->document_class) || ! $this->model) {
+            if (! $this->hasDocumentClass || ! $this->model) {
                 return null;
             }
 
@@ -178,6 +186,11 @@ class GeneratedDocument extends Model
      */
     public function model(): MorphTo
     {
-        return $this->morphTo('documentable');
+        return $this
+            ->morphTo('documentable')
+            ->when(
+                $this->hasDocumentClass && method_exists($this->document_class, 'scopeDocumentable'),
+                fn ($query) => $this->document_class::scopeDocumentable($query)
+            );
     }
 }
