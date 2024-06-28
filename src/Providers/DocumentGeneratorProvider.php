@@ -5,9 +5,9 @@ namespace mindtwo\DocumentGenerator\Providers;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldGenerateEvent;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
-use mindtwo\DocumentGenerator\Modules\Content\Listeners\DocumentShouldGenerateListener;
+use mindtwo\DocumentGenerator\Modules\Content\Listeners\DocumentGeneratedListener;
+use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentGeneratedEvent;
 use mindtwo\DocumentGenerator\Modules\Generation\Listeners\DocumentShouldSaveListener;
 use mindtwo\DocumentGenerator\Modules\Placeholder\Services\PlaceholderResolver;
 use mindtwo\DocumentGenerator\Services\DocumentService;
@@ -38,8 +38,11 @@ class DocumentGeneratorProvider extends ServiceProvider
             ]);
         }
 
-        Event::listen(DocumentShouldGenerateEvent::class, DocumentShouldGenerateListener::class);
+        // Event::listen(DocumentShouldGenerateEvent::class, DocumentShouldGenerateListener::class);
+        Event::listen(DocumentGeneratedEvent::class, DocumentGeneratedListener::class);
+
         Event::listen(DocumentShouldSaveToDiskEvent::class, DocumentShouldSaveListener::class);
+        // Event::listen(DocumentShouldSaveToDiskEvent::class, DocumentShouldSaveListener::class);
     }
 
     /**

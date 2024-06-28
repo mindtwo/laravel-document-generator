@@ -3,9 +3,9 @@
 namespace mindtwo\DocumentGenerator\Modules\Content\Listeners;
 
 use mindtwo\DocumentGenerator\Modules\Content\Services\DocumentContent;
-use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldGenerateEvent;
+use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentGeneratedEvent;
 
-class DocumentShouldGenerateListener
+class DocumentGeneratedListener
 {
     public function __construct()
     {
@@ -15,7 +15,7 @@ class DocumentShouldGenerateListener
     /**
      * Handle the event.
      */
-    public function handle(DocumentShouldGenerateEvent $event): void
+    public function handle(DocumentGeneratedEvent $event): void
     {
         $generatedDocument = $event->document;
 

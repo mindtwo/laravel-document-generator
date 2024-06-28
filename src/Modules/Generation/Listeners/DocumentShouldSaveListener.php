@@ -3,6 +3,7 @@
 namespace mindtwo\DocumentGenerator\Modules\Generation\Listeners;
 
 use mindtwo\DocumentGenerator\Modules\Document\Document;
+use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentSavedToDiskEvent;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
 use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
 use mindtwo\DocumentGenerator\Modules\Generation\Factory\FileCreatorFactory;
@@ -29,6 +30,9 @@ class DocumentShouldSaveListener
 
         // Create the file on disk
         $fileCreator->saveToDisk($generatedDocument, $generatedDocument->file_path, $generatedDocument->file_name);
+
+        // Dispatch the event
+        DocumentSavedToDiskEvent::dispatch($generatedDocument);
     }
 
     /**

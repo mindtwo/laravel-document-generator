@@ -7,6 +7,7 @@ use mindtwo\DocumentGenerator\Modules\Content\Blocks\Block;
 use mindtwo\DocumentGenerator\Modules\Content\Layouts\Layout;
 use mindtwo\DocumentGenerator\Modules\Document\Enums\DocumentOrientation;
 use mindtwo\DocumentGenerator\Modules\Document\Enums\DocumentWidth;
+use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentGeneratedEvent;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldGenerateEvent;
 use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
 use mindtwo\DocumentGenerator\Modules\Generation\Contracts\FileNameGenerator;
@@ -135,9 +136,11 @@ abstract class Document
      */
     public function generate(): GeneratedDocument
     {
+        DocumentShouldGenerateEvent::dispatch($this);
+
         $generatedDocument = $this->getGeneratedDocument();
 
-        DocumentShouldGenerateEvent::dispatch($generatedDocument);
+        DocumentGeneratedEvent::dispatch($generatedDocument);
 
         return $this->getGeneratedDocument();
     }
