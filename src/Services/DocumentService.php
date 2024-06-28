@@ -184,7 +184,8 @@ class DocumentService
         // recreate document content
         $documentContent = new DocumentContent(
             $document,
-            $model
+            $model,
+            $this->generatedDocument->extra ?? [],
         );
 
         list($resolved, $content) = $documentContent->html();

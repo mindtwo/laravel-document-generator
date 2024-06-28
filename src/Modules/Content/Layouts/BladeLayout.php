@@ -2,13 +2,6 @@
 
 namespace mindtwo\DocumentGenerator\Modules\Content\Layouts;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\View\Component;
-use Illuminate\View\ComponentAttributeBag;
-use mindtwo\DocumentGenerator\Modules\Document\Document;
-use mindtwo\DocumentGenerator\Modules\Placeholder\Services\PlaceholderResolver;
-
 class BladeLayout extends Layout
 {
 

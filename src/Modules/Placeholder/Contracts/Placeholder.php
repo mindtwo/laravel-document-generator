@@ -7,5 +7,5 @@ use Stringable;
 
 interface Placeholder
 {
-    public function resolve(Model $model): null|string|Stringable;
+    public function resolve(Model $model, array $extra = []): null|string|Stringable;
 }

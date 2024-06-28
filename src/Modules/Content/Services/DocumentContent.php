@@ -14,6 +14,7 @@ class DocumentContent
     public function __construct(
         protected Document $document,
         protected Model $model,
+        protected array $extra = [],
     ) {
         $this->placeholderResolver = app(PlaceholderResolver::class);
     }
@@ -30,7 +31,7 @@ class DocumentContent
         $content = '';
         // render all blocks
         foreach ($blocks as $block) {
-            $content .= $block->render($resolved);
+            $content .= $block->render($resolved, $this->extra);
         }
 
         return [$resolved, $this->document->layout()->render($this->document, $this->model, $content)];
@@ -47,12 +48,12 @@ class DocumentContent
         $finalizedPlaceholder = $this->collectFinalizedPlaceholder();
 
         if (empty($finalizedPlaceholder)) {
-            return $this->placeholderResolver->resolveAll($placeholder, $this->model);
+            return $this->placeholderResolver->resolveAll($placeholder, $this->model, $this->extra);
         }
 
         // get all remaining placeholder
         $remainingPlaceholder = array_values(array_diff($placeholder, array_keys($finalizedPlaceholder)));
-        $remainingResolved = $this->placeholderResolver->resolveAll($remainingPlaceholder, $this->model);
+        $remainingResolved = $this->placeholderResolver->resolveAll($remainingPlaceholder, $this->model, $this->extra);
 
         return array_merge($finalizedPlaceholder, $remainingResolved);
     }

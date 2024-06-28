@@ -24,7 +24,7 @@ class BaseBlock extends Block
     /**
      * {@inheritDoc}
      */
-    public function render(array $resolvedPlaceholder): string
+    public function render(array $resolvedPlaceholder, array $extra = []): string
     {
         $rendered = $this->template();
 

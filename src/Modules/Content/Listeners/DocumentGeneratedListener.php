@@ -25,7 +25,8 @@ class DocumentGeneratedListener
 
         $documentContent = new DocumentContent(
             $generatedDocument->instance,
-            $generatedDocument->model
+            $generatedDocument->model,
+            $generatedDocument->extra ?? []
         );
 
         list($resolved, $content) = $documentContent->html();

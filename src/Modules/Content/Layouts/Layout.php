@@ -23,15 +23,15 @@ abstract class Layout
     /**
      * Render our layout
      */
-    public function render(Document $document, Model $model, string $content): string
+    public function render(Document $document, Model $model, string $content, array $extra = []): string
     {
-        return Blade::renderComponent($this->component($document, $model, $content));
+        return Blade::renderComponent($this->component($document, $model, $content, $extra));
     }
 
     /**
      * Get our layout as component class
      */
-    protected function component(Document $document, Model $model, string $content): Component
+    protected function component(Document $document, Model $model, string $content, array $extra = []): Component
     {
         $templateString = preg_replace($this->placeholderRegex('slot'), $content, $this->template());
 

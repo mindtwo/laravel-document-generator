@@ -39,14 +39,15 @@ class PlaceholderResolver
      *
      * @param  array  $placeholders
      * @param  Model  $model
+     * @param  array  $extra
      * @return array
      */
-    public function resolveAll(array $placeholders, Model $model): array
+    public function resolveAll(array $placeholders, Model $model, array $extra = []): array
     {
         $resolved = [];
 
         foreach ($placeholders as $placeholder) {
-            $resolved[$placeholder] = $this->resolve($placeholder, $model);
+            $resolved[$placeholder] = $this->resolve($placeholder, $model, $extra);
         }
 
         return $resolved;
@@ -60,10 +61,10 @@ class PlaceholderResolver
      * @param  Model  $model
      * @return ?string
      */
-    public function resolve(string $placeholderName, Model $model): ?string
+    public function resolve(string $placeholderName, Model $model, array $extra = []): ?string
     {
         if (isset($this->placeholders[$placeholderName])) {
-            $value = $this->placeholders[$placeholderName]->resolve($model);
+            $value = $this->placeholders[$placeholderName]->resolve($model, $extra);
 
             return $value;
         }

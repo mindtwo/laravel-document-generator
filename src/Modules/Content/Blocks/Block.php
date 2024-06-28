@@ -14,7 +14,7 @@ abstract class Block
      *
      * @param array $fields Array of resolved placeholders.
      */
-    abstract public function render(array $resolvedPlaceholder): string;
+    abstract public function render(array $resolvedPlaceholder, array $extra = []): string;
 
     public function template(): string
     {

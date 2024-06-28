@@ -32,10 +32,10 @@ class BladeBlock extends Block
     /**
      * {@inheritDoc}
      */
-    public function render(array $resolvedPlaceholder): string
+    public function render(array $resolvedPlaceholder, array $extra = []): string
     {
         $fields = $this->fields($resolvedPlaceholder);
 
-        return Blade::render($this->template, $fields);
+        return Blade::render($this->template, array_merge($fields, ['extra' => $extra]));
     }
 }
