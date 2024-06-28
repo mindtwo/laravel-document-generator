@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 trait HasDocuments
 {
 
-    public static function bootHasDocument()
+    public static function bootHasDocuments()
     {
         static::deleting(function (ContractsHasDocuments $model) {
             if (in_array(SoftDeletes::class, class_uses_recursive($model))) {
@@ -28,7 +28,7 @@ trait HasDocuments
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function generatedDocument(): MorphMany
+    public function generatedDocuments(): MorphMany
     {
         return $this->morphMany(GeneratedDocument::class, 'documentable');
     }
