@@ -50,6 +50,7 @@ abstract class Document
 
     public function __construct(
         private Model $model,
+        private ?GeneratedDocument $generatedDocument = null,
     ) {
 
     }
@@ -148,8 +149,17 @@ abstract class Document
     /**
      * Get the generated document model.
      */
-    public function getGeneratedDocument(): GeneratedDocument
+    public function getGeneratedDocument(bool $refresh = false): GeneratedDocument
     {
+        // If the document is already generated, return it.
+        if ($this->generatedDocument) {
+            if ($refresh) {
+                $this->generatedDocument = $this->generatedDocument->refresh();
+            }
+
+            return $this->generatedDocument;
+        }
+
         return GeneratedDocument::firstOrCreate([
             'documentable_id' => $this->model->id,
             'documentable_type' => $this->model->getMorphClass(),

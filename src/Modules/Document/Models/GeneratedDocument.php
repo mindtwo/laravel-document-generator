@@ -131,7 +131,7 @@ class GeneratedDocument extends Model
                 return null;
             }
 
-            return new $this->document_class($this->model);
+            return new $this->document_class($this->model, $this);
         });
     }
 
