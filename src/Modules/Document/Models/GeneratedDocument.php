@@ -48,6 +48,16 @@ class GeneratedDocument extends Model
         static::deleted(function (GeneratedDocument $document) {
             $document->deleteDocumentFile();
         });
+
+        // Clear all fields when replicationg
+        static::replicating(function ($model) {
+            $model->content = null;
+            $model->disk = null;
+            $model->file_name = null;
+            $model->file_path = null;
+            $model->extra = null;
+            $model->resolved_placeholder = null;
+        });
     }
 
     /**
@@ -187,7 +197,7 @@ class GeneratedDocument extends Model
     public function model(): MorphTo
     {
         return $this
-            ->morphTo('documentable')
+            ->morphTo(__FUNCTION__, 'documentable_type', 'documentable_id')
             ->when(
                 $this->hasDocumentClass && method_exists($this->document_class, 'scopeDocumentable'),
                 fn ($query) => $this->document_class::scopeDocumentable($query)
