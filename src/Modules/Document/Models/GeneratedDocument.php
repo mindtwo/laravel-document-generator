@@ -18,8 +18,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 /**
  * @property int $id
  * @property string $uuid
- * @property string $model_type
- * @property string $model_id
+ * @property string $documentable_type
+ * @property int $documentable_id
  * @property string $document_class
  * @property ?string $content
  * @property ?string $disk
