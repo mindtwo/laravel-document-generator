@@ -92,9 +92,9 @@ class PlaceholderResolver
             return new Field($placeholderName, $value);
         }
 
-        // if (is_null($document)) {
-        //     return new Field($placeholderName, null);
-        // }
+        if (is_null($document)) {
+            return new Field($placeholderName, null);
+        }
 
         $expl = explode('.', $placeholderName);
 
