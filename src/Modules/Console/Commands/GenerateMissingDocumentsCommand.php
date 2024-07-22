@@ -5,6 +5,7 @@ namespace mindtwo\DocumentGenerator\Modules\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use mindtwo\DocumentGenerator\Modules\Console\Events\MissingDocumentsCreatedEvent;
 use mindtwo\DocumentGenerator\Modules\Document\Contracts\Commandable;
 use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
@@ -58,16 +59,25 @@ class GenerateMissingDocumentsCommand extends Command
         }
 
         $createdDocuments = collect([]);
+        $failedDocuments = collect([]);
 
         // generate documents
-        $missingDocuments->each(function (Model $model) use ($documentClass, $createdDocuments) {
-            $document = document($model, $documentClass);
-            $document->saveToDisk();
+        $missingDocuments->each(function (Model $model) use ($documentClass, $createdDocuments, $failedDocuments) {
+            try {
+                $document = document($model, $documentClass);
+                $document->saveToDisk();
 
-            $createdDocuments->push($document->getGeneratedDocument());
+                $createdDocuments->push($document->getGeneratedDocument());
+            } catch (\Throwable $th) {
+                Log::error($th);
+
+                $failedDocuments->push($model);
+            }
         });
-
-        $this->info('Documents generated successfully.', 'vv');
+        // output results
+        $this->info(sprintf('Generated %d documents. Generation failed for %d models.', $createdDocuments->count(), $failedDocuments->count()));
+        $this->info(sprintf('Created models: %s', $createdDocuments->pluck('documentable_id')->join(', ')), 'vv');
+        $this->info(sprintf('Failed models: %s', $failedDocuments->pluck('id')->join(', ')), 'v');
 
         MissingDocumentsCreatedEvent::dispatch($documentClass, $createdDocuments);
 
