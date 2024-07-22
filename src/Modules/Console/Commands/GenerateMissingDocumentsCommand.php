@@ -17,7 +17,7 @@ class GenerateMissingDocumentsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'documents:generate-missing {document : Alias or document class that indicates the type we want to recreate} {--force : Force recreation of all documents} {--dry-run : Do not recreate documents} {--id=* : Ids of models to recreate the documents for.} {--exclude-id=* : Ids we want to exclude from generation}';
+    protected $signature = 'documents:generate-missing {document : Alias or document class that indicates the type we want to recreate} {--F|force : Force recreation of all documents} {--D|dry-run : Do not recreate documents} {--id=* : Ids of models to recreate the documents for.} {--exclude-id=* : Ids we want to exclude from generation}';
 
     /**
      * The console command description.
@@ -41,7 +41,7 @@ class GenerateMissingDocumentsCommand extends Command
         $this->info("Generating missing $documentClass for model", 'v');
 
         // get all models with missing documents
-        $missingDocuments = $this->getModelsWithMissingDocument($documentClass);
+        $missingDocuments = $this->getModelsWithMissingDocument($documentClass, $this->option('force'));
         if ($missingDocuments->isEmpty()) {
             $this->info('No missing documents found.');
 
@@ -77,19 +77,16 @@ class GenerateMissingDocumentsCommand extends Command
     /**
      * Get all models with missing documents.
      */
-    private function getModelsWithMissingDocument(string $documentClass): Collection
+    private function getModelsWithMissingDocument(string $documentClass, bool $force): Collection
     {
-        $eligibleModels = $documentClass::getEligibleModels($documentClass);
+        $eligibleModels = $documentClass::getEligibleModels($force);
 
         return $this->filterEligibleModels($eligibleModels, $documentClass);
-
-
-
     }
 
     private function filterEligibleModels(Collection $eligibleModels, string $documentClass): Collection
     {
-        if ($eligibleModels->isEmpty() || $this->option('force')) {
+        if ($eligibleModels->isEmpty()) {
             return $eligibleModels;
         }
 

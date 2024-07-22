@@ -6,5 +6,5 @@ use Illuminate\Support\Collection;
 
 interface Commandable
 {
-    public static function getEligibleModels(): Collection;
+    public static function getEligibleModels(bool $force): Collection;
 }
