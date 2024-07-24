@@ -2,7 +2,9 @@
 
 namespace mindtwo\DocumentGenerator\Modules\Content\Blocks;
 
-abstract class Block
+use Illuminate\Contracts\Support\Arrayable;
+
+abstract class Block implements Arrayable
 {
     protected ?string $template = null;
     protected ?string $name = null;
@@ -42,5 +44,19 @@ abstract class Block
         preg_match_all($this->placeholderRegex(), $this->template(), $placeholder);
 
         return $placeholder['placeholder'] ?? [];
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray()
+    {
+        return [
+            'type' => static::class,
+            'template' => $this->template,
+            'name' => $this->name,
+        ];
     }
 }
