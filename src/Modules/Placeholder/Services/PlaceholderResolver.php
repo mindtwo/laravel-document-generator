@@ -4,6 +4,7 @@ namespace mindtwo\DocumentGenerator\Modules\Placeholder\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use mindtwo\DocumentGenerator\Modules\Placeholder\Contracts\HasFake;
 use mindtwo\DocumentGenerator\Modules\Placeholder\Contracts\Placeholder;
 
 class PlaceholderResolver
@@ -95,6 +96,19 @@ class PlaceholderResolver
         }
 
         return null;
+    }
+
+    public function resolveWithFake(string $placeholderName, Model $model, array $extra = []): ?string
+    {
+        if (isset($this->placeholders[$placeholderName]) && $this->placeholders[$placeholderName] instanceof HasFake) {
+            $placeholder = $this->placeholders[$placeholderName];
+
+            if ($placeholder instanceof HasFake) {
+                return $placeholder->fake();
+            }
+        }
+
+        return $this->resolve($placeholderName, $model, $extra);
     }
 
     /**
