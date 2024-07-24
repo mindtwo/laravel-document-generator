@@ -98,6 +98,34 @@ class PlaceholderResolver
         return null;
     }
 
+    /**
+     * Resolve values for all placeholders in array
+     * for given model attached to document
+     *
+     * @param  array  $placeholders
+     * @param  Model  $model
+     * @param  array  $extra
+     * @return array
+     */
+    public function resolveAllWithFakes(array $placeholders, Model $model, array $extra = []): array
+    {
+        $resolved = [];
+
+        foreach ($placeholders as $placeholder) {
+            $resolved[$placeholder] = $this->resolveWithFake($placeholder, $model, $extra);
+        }
+
+        return $resolved;
+    }
+
+    /**
+     * Resolve a value for a placeholder by its name for the model
+     * attached to document
+     *
+     * @param  string  $placeholderName
+     * @param  Model  $model
+     * @return ?string
+     */
     public function resolveWithFake(string $placeholderName, Model $model, array $extra = []): ?string
     {
         if (isset($this->placeholders[$placeholderName]) && $this->placeholders[$placeholderName] instanceof HasFake) {
