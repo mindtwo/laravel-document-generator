@@ -3,92 +3,43 @@
 namespace mindtwo\DocumentGenerator\Modules\Content\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use mindtwo\DocumentGenerator\Modules\Content\Blocks\Block;
+use mindtwo\DocumentGenerator\Modules\Content\Layouts\Layout;
+use mindtwo\DocumentGenerator\Modules\Content\Traits\ResolvesDocumentContent;
 use mindtwo\DocumentGenerator\Modules\Document\Document;
 use mindtwo\DocumentGenerator\Modules\Placeholder\Services\PlaceholderResolver;
 
 class DocumentContent
 {
+    use ResolvesDocumentContent;
+
     protected PlaceholderResolver $placeholderResolver;
 
     public function __construct(
         protected Document $document,
         protected Model $model,
         protected array $extra = [],
+        protected bool $fake = false,
     ) {
         $this->placeholderResolver = app(PlaceholderResolver::class);
     }
 
-    public function html(): array
+    protected function getLayout(): ?Layout
     {
-        // get all blocks for document
-        $blocks = $this->document->blocks();
-        $blockPlaceholder = $this->collectPlaceholder($blocks);
-
-        // get all placeholder values for document
-        $resolved = $this->resolvePlaceholder($blockPlaceholder);
-
-        $content = '';
-        // render all blocks
-        foreach ($blocks as $block) {
-            $content .= $block->render($resolved, $this->extra);
-        }
-
-        return [$resolved, $this->document->layout()->render($this->document, $this->model, $content)];
+        return $this->document->layout();
     }
 
-    /**
-     * Resolve all placeholder
-     *
-     * @param array $placeholder
-     * @return array
-     */
-    protected function resolvePlaceholder(array $placeholder): array
+    protected function getBlocks(): array
     {
-        $finalizedPlaceholder = $this->collectFinalizedPlaceholder();
-
-        if (empty($finalizedPlaceholder)) {
-            return $this->placeholderResolver->resolveAll($placeholder, $this->model, $this->extra);
-        }
-
-        // get all remaining placeholder
-        $remainingPlaceholder = array_values(array_diff($placeholder, array_keys($finalizedPlaceholder)));
-        $remainingResolved = $this->placeholderResolver->resolveAll($remainingPlaceholder, $this->model, $this->extra);
-
-        return array_merge($finalizedPlaceholder, $remainingResolved);
+        return $this->document->blocks();
     }
 
-    /**
-     * Collect all finalized placeholder values
-     *
-     * @return array
-     */
-    private function collectFinalizedPlaceholder(): array
+    protected function getDocument(): ?Document
     {
-        $generatedDocument = $this->document->getGeneratedDocument();
-
-        if (empty($generatedDocument->resolved_placeholder) || empty($this->document->getFinalizedPlaceholder())) {
-            return [];
-        }
-        $finalizedPlaceholderNames = $this->document->getFinalizedPlaceholder();
-
-        return array_intersect_key($generatedDocument->resolved_placeholder, array_flip($finalizedPlaceholderNames));
+        return $this->document;
     }
 
-    /**
-     * Collect all placeholder from blocks
-     *
-     * @param array<Block> $blocks
-     * @return array
-     */
-    private function collectPlaceholder(array $blocks): array
+    protected function getDocumentClass(): ?string
     {
-        $placeholders = [];
-
-        foreach ($blocks as $block) {
-            $placeholders = array_merge($placeholders, $block->placeholder());
-        }
-
-        return $placeholders;
+        return get_class($this->document);
     }
 }

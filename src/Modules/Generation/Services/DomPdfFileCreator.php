@@ -4,9 +4,13 @@ namespace mindtwo\DocumentGenerator\Modules\Generation\Services;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Response;
+use mindtwo\DocumentGenerator\Modules\Document\Contracts\DocumentHolder;
 use mindtwo\DocumentGenerator\Modules\Document\Document;
 use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
 use mindtwo\DocumentGenerator\Modules\Generation\Contracts\FileCreator;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 
 class DomPdfFileCreator implements FileCreator
 {
@@ -14,12 +18,17 @@ class DomPdfFileCreator implements FileCreator
     {
     }
 
-    public function download(GeneratedDocument $generatedDocument, ?string $downloadName = null, bool $inline = false)
+    /**
+     * Download GeneratedDocument
+     *
+     * @return mixed
+     */
+    public function download(DocumentHolder $documentHolder, ?string $downloadName = null, bool $inline = false)
     {
-        $document = $generatedDocument->instance;
+        $document = $documentHolder->documentInstance();
         $options = $this->getDomPdfOptions();
 
-        $dompdf = $this->getDompdf($options, $generatedDocument, $document);
+        $dompdf = $this->getDompdf($options, $documentHolder, $document);
 
         // get the download name
         $downloadName = $downloadName ?? $document->fileName() ?? 'document.pdf';
@@ -27,44 +36,48 @@ class DomPdfFileCreator implements FileCreator
             $downloadName .= '.pdf';
         }
 
-        $dompdf->stream($downloadName ?? 'document.pdf', [
-            'Content-Disposition' => ($inline ? 'inline' : 'attachment')."; filename={$generatedDocument->file_name}",
+        $fileName = $documentHolder->getFileName() ?? 'document.pdf';
+        $output = $dompdf->output();
+
+        return new Response($output, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => HeaderUtils::makeDisposition($inline ? 'inline' : 'attachment', $downloadName, $fileName),
+            'Content-Length' => strlen($output),
         ]);
-        exit(0);
     }
 
     /**
      * Save GeneratedDocument to disk
      *
-     * @param GeneratedDocument $generatedDocument
-     * @param string $file_path
-     * @param string $file_name
-     * @return void
+     * @param  DocumentHolder  $generatedDocument
      */
-    public function saveToDisk(GeneratedDocument $generatedDocument, string $file_path, string $file_name): void
+    public function saveToDisk(DocumentHolder $documentHolder, string $file_path, string $file_name): void
     {
-        $document = $generatedDocument->instance;
+        $document = $documentHolder->documentInstance();
         $options = $this->getDomPdfOptions();
 
-        $dompdf = $this->getDompdf($options, $generatedDocument, $document);
+        $dompdf = $this->getDompdf($options, $documentHolder, $document);
         $file = $dompdf->output();
 
-        if (! str_ends_with($file_name, '.pdf')) {
-            $file_name = "$file_name.pdf";
+        $fileName = $documentHolder->getFileName();
+        if (! str_ends_with($fileName, '.pdf')) {
+            $file_name = "$fileName.pdf";
 
-            $generatedDocument->update([
-                'file_name' => $file_name,
-            ]);
+            if ($documentHolder instanceof Model) {
+                $documentHolder->update([
+                    'file_name' => $file_name,
+                ]);
+            }
         }
 
-        $generatedDocument->diskInstance()->put("$file_path/$file_name", $file);
+        $documentHolder->diskInstance()->put("$file_path/$file_name", $file);
     }
 
-    protected function getDompdf(Options $options, GeneratedDocument $generatedDocument, Document $document): Dompdf
+    protected function getDompdf(Options $options, DocumentHolder $documentHolder, Document $document): Dompdf
     {
         $dompdf = new Dompdf($options);
 
-        $dompdf->loadHtml($generatedDocument->content);
+        $dompdf->loadHtml($documentHolder->getContent());
         $dompdf->setPaper('A4', $document->documentOrientation());
 
         $dompdf->render();
@@ -75,7 +88,16 @@ class DomPdfFileCreator implements FileCreator
     protected function getDompdfOptions(): Options
     {
         $options = new Options();
+
+        // TODO do this settings in config
         $options->set('isRemoteEnabled', true);
+        $options->set('isHtml5ParserEnabled', true);
+
+        $options->setFontCache(public_path('assets/fonts'));
+        $options->setChroot([
+            // 'resources/views/',
+            public_path('assets/fonts'),
+        ]);
 
         // only allow remote files from our env url
         $options->setAllowedProtocols([
@@ -83,7 +105,7 @@ class DomPdfFileCreator implements FileCreator
             'https://' => true, // TODO define rules in config
             'file://' => false,
         ]);
-        $options->setTempDir(config('documents.files.tmp') ?? '/tmp/documents');
+        $options->setTempDir(config('documents.files.tmp_path') ?? '/tmp/documents');
 
         return $options;
     }

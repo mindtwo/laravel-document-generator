@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use mindtwo\DocumentGenerator\Modules\Document\Contracts\DocumentHolder;
 use mindtwo\DocumentGenerator\Modules\Document\Document;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
 use mindtwo\DocumentGenerator\Modules\Generation\Factory\FileCreatorFactory;
@@ -36,9 +37,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  * @property-read ?string $full_path
  * @property-read Document $instance
  */
-class GeneratedDocument extends Model
+class GeneratedDocument extends Model implements DocumentHolder
 {
-
     use AutoCreateUuid;
 
     public static function boot()
@@ -180,15 +180,40 @@ class GeneratedDocument extends Model
         }
 
         $fileCreator = FileCreatorFactory::make($this);
+
         return $fileCreator->download($this, null, $inline);
+    }
+
+    /**
+     * Get the file name of the document.
+     */
+    public function getFileName(): ?string
+    {
+        return $this->file_name;
     }
 
     /**
      * Get disk instance where file is stored.
      */
-    public function diskInstance(): Filesystem
+    public function diskInstance(): ?Filesystem
     {
         return Storage::disk($this->disk);
+    }
+
+    /**
+     * Get the document instance.
+     */
+    public function documentInstance(): ?Document
+    {
+        return $this->instance;
+    }
+
+    /**
+     * Get the content of the document.
+     */
+    public function getContent(): string
+    {
+        return $this->content ?? '';
     }
 
     /**
@@ -202,5 +227,13 @@ class GeneratedDocument extends Model
                 $this->hasDocumentClass && method_exists($this->document_class, 'scopeDocumentable'),
                 fn ($query) => $this->document_class::scopeDocumentable($query)
             );
+    }
+
+    /**
+     * Get the owning model.
+     */
+    public function getDocumentable(): Model
+    {
+        return $this->model;
     }
 }

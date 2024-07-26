@@ -5,6 +5,7 @@ namespace mindtwo\DocumentGenerator\Modules\Document;
 use Illuminate\Database\Eloquent\Model;
 use mindtwo\DocumentGenerator\Modules\Content\Blocks\Block;
 use mindtwo\DocumentGenerator\Modules\Content\Layouts\Layout;
+use mindtwo\DocumentGenerator\Modules\Document\Data\TmpDocument;
 use mindtwo\DocumentGenerator\Modules\Document\Enums\DocumentOrientation;
 use mindtwo\DocumentGenerator\Modules\Document\Enums\DocumentWidth;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentGeneratedEvent;
@@ -20,7 +21,7 @@ abstract class Document
      */
     protected ?string $filePathGenerator = null;
 
-     /**
+    /**
      * @var class-string<FileNameGenerator>
      */
     protected ?string $fileNameGenerator = null;
@@ -29,8 +30,6 @@ abstract class Document
      * The finalized placeholder.
      * Add placeholder names that should not be changed,
      * if the document and the blocks are regenerated.
-     *
-     * @var array
      */
     protected array $finalizedPlaceholder = [];
 
@@ -49,16 +48,14 @@ abstract class Document
     protected $contentWidth = DocumentWidth::ThreeFourths;
 
     public function __construct(
-        private Model $model,
+        protected Model $model,
         private ?GeneratedDocument $generatedDocument = null,
-    ) {
-
-    }
+    ) {}
 
     /**
      * Get the blocks in order to render in the document.
      *
-     * @return array<Block>
+     * @return array<int, Block>
      */
     abstract public function blocks(): array;
 
@@ -90,6 +87,7 @@ abstract class Document
     public function filePath(): string
     {
         $filePathGenerator = $this->filePathGenerator() ?? config('documents.files.file_path_generator');
+
         return rtrim(app($filePathGenerator)->generate($this->getGeneratedDocument()), '/');
     }
 
@@ -147,6 +145,18 @@ abstract class Document
     }
 
     /**
+     * Generate a temporary document.
+     */
+    public function generateTmp(): TmpDocument
+    {
+        return new TmpDocument(
+            instance: $this,
+            model: $this->model,
+            documentClass: static::class,
+        );
+    }
+
+    /**
      * Get the generated document model.
      */
     public function getGeneratedDocument(bool $refresh = false): GeneratedDocument
@@ -171,5 +181,4 @@ abstract class Document
     {
         return new static($model);
     }
-
 }

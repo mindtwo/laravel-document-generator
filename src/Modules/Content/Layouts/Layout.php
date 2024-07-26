@@ -35,7 +35,7 @@ abstract class Layout
     {
         $templateString = preg_replace($this->placeholderRegex('slot'), $content, $this->template());
 
-        $attributes = $this->getAttributes($document, $model);
+        $attributes = new ComponentAttributeBag($this->getAttributes($document, $model));
 
         return new class($templateString, $attributes) extends Component
         {
@@ -76,8 +76,7 @@ abstract class Layout
         $fields = app(PlaceholderResolver::class)->resolveAll($placeholder, $model);
 
         $data = collect($fields)
-            ->except($this->excludedPlaceholder)
-            ->mapWithKeys(fn ($field, $key) => optional($field)->toArray() ?? [$key => '']);
+            ->except($this->getExcludedPlaceholder());
 
         $dims = $this->pageDimensions($document);
 
@@ -85,7 +84,7 @@ abstract class Layout
         $data->put('pageHeight', $dims['height']);
         $data->put('innerWidth', $document->contentWidth());
 
-        return new ComponentAttributeBag($data->toArray());
+        return $data->toArray();
     }
 
     /**
@@ -97,5 +96,16 @@ abstract class Layout
         preg_match_all($this->placeholderRegex(), $this->template(), $placeholder);
 
         return $placeholder['placeholder'] ?? [];
+    }
+
+    /**
+     * Get array of all excluded placeholder.
+     */
+    public function getExcludedPlaceholder(): array
+    {
+        return [
+            ...$this->excludedPlaceholder,
+            'slot',
+        ];
     }
 }
