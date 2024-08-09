@@ -7,6 +7,21 @@ return [
      */
     'file_creator' => \mindtwo\DocumentGenerator\Modules\Generation\Services\DomPdfFileCreator::class,
 
+    'render' => [
+        'dpi' => 96,
+
+        'is_html5_parser_enabled' => true,
+
+        'is_remote_enabled' => true,
+
+        'font_cache' => public_path('assets/fonts'),
+
+        'chroot' => [
+            // 'resources/views/',
+            public_path('assets/fonts'),
+        ],
+    ],
+
     /**
      * File related configuration
      */

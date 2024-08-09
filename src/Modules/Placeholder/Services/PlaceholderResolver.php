@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use mindtwo\DocumentGenerator\Modules\Placeholder\Contracts\HasFake;
 use mindtwo\DocumentGenerator\Modules\Placeholder\Contracts\Placeholder;
+use mindtwo\DocumentGenerator\Modules\Placeholder\Contracts\PlaceholderMultiple;
 
 class PlaceholderResolver
 {
@@ -37,11 +38,6 @@ class PlaceholderResolver
     /**
      * Resolve values for all placeholders in array
      * for given model attached to document
-     *
-     * @param  array  $placeholders
-     * @param  Model  $model
-     * @param  array  $extra
-     * @return array
      */
     public function resolveAll(array $placeholders, Model $model, array $extra = []): array
     {
@@ -58,16 +54,26 @@ class PlaceholderResolver
      * Resolve a value for a placeholder by its name for the model
      * attached to document
      *
-     * @param  string  $placeholderName
-     * @param  Model  $model
      * @return ?string
      */
     public function resolve(string $placeholderName, Model $model, array $extra = []): ?string
     {
         if (isset($this->placeholders[$placeholderName])) {
-            $value = $this->placeholders[$placeholderName]->resolve($model, $extra);
+            $placeholder = $this->placeholders[$placeholderName];
+
+            $value = $placeholder->resolve($model, $extra);
+
+            // check if the placeholder is a multiple placeholder
+            if ($placeholder instanceof PlaceholderMultiple) {
+                return $value[$placeholderName] ?? null;
+            }
 
             return $value;
+        }
+
+        // check if the placeholder is a property of the model
+        if (isset($model->{$placeholderName})) {
+            return $model->{$placeholderName};
         }
 
         $expl = explode('.', $placeholderName);
@@ -101,11 +107,6 @@ class PlaceholderResolver
     /**
      * Resolve values for all placeholders in array
      * for given model attached to document
-     *
-     * @param  array  $placeholders
-     * @param  Model  $model
-     * @param  array  $extra
-     * @return array
      */
     public function resolveAllWithFakes(array $placeholders, Model $model, array $extra = []): array
     {
@@ -122,8 +123,6 @@ class PlaceholderResolver
      * Resolve a value for a placeholder by its name for the model
      * attached to document
      *
-     * @param  string  $placeholderName
-     * @param  Model  $model
      * @return ?string
      */
     public function resolveWithFake(string $placeholderName, Model $model, array $extra = []): ?string
@@ -142,11 +141,11 @@ class PlaceholderResolver
     /**
      * Register a placeholder for a given name
      *
-     * @param  class-string<Placeholder>|Placeholder  $placeholder
+     * @param  class-string<Placeholder>|class-string<PlaceholderMultiple>|Placeholder|PlaceholderMultiple  $placeholder
      * @param  ?string  $name
      * @param  bool  $override
      */
-    public function registerPlaceholder(string|Placeholder $placeholder, ?string $name = null, $override = false): void
+    public function registerPlaceholder(string|Placeholder|PlaceholderMultiple $placeholder, ?string $name = null, $override = false): void
     {
         $name = $name ?? Str::of(class_basename($placeholder))->replace('Placeholder', '')->snake()->toString();
 
@@ -154,7 +153,21 @@ class PlaceholderResolver
             throw new \Exception("There is already a placeholder registered for the name $name", 1);
         }
 
-        $this->placeholders[$name] = is_string($placeholder) ? app()->make($placeholder) : $placeholder;
+        $placeholder = is_string($placeholder) ? app()->make($placeholder) : $placeholder;
+
+        if (! $placeholder instanceof Placeholder && ! $placeholder instanceof PlaceholderMultiple) {
+            throw new \Exception('Placeholder must be an instance of Placeholder or PlaceholderMultiple', 1);
+        }
+
+        if ($placeholder instanceof PlaceholderMultiple) {
+            foreach ($placeholder->resolvedKeys() as $key) {
+                $this->placeholders[$key] = $placeholder;
+            }
+
+            return;
+        }
+
+        $this->placeholders[$name] = $placeholder;
     }
 
     /**

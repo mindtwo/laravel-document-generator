@@ -90,14 +90,22 @@ class DomPdfFileCreator implements FileCreator
         $options = new Options();
 
         // TODO do this settings in config
-        $options->set('isRemoteEnabled', true);
-        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', config('documents.render.is_remote_enabled', true));
+        $options->set('isHtml5ParserEnabled', config('documents.render.is_html5_parser_enabled', true));
 
-        $options->setFontCache(public_path('assets/fonts'));
-        $options->setChroot([
-            // 'resources/views/',
-            public_path('assets/fonts'),
-        ]);
+        // configure font dir, font cache and chroot
+        if ($value = config('documents.render.font_dir')) {
+            $options->setFontDir($value);
+        }
+        if ($value = config('documents.render.font_cache')) {
+            $options->setFontCache($value);
+        }
+        if ($value = config('documents.render.chroot')) {
+            $options->setChroot($value);
+        }
+
+        // set dpi
+        $options->setDpi(config('documents.render.dpi', 96));
 
         // only allow remote files from our env url
         $options->setAllowedProtocols([
