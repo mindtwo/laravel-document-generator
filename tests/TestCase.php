@@ -7,8 +7,8 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
-    use WithWorkbench;
     use RefreshDatabase;
+    use WithWorkbench;
 
     /**
      * Define database migrations.
@@ -18,6 +18,5 @@ class TestCase extends \Orchestra\Testbench\TestCase
     protected function defineDatabaseMigrations()
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations-v2');
-        $this->loadMigrationsFrom(__DIR__.'/database');
     }
 }

@@ -1,2 +1,30 @@
 providers:
+  - Workbench\App\Providers\WorkbenchServiceProvider
   - mindtwo\DocumentGenerator\Providers\DocumentGeneratorProvider
+
+migrations:
+  - workbench/database/migrations
+
+seeders:
+  - Workbench\Database\Seeders\DatabaseSeeder
+
+resources:
+  - workbench/resources/views
+  - workbench/resources/lang
+  - workbench/resources/assets
+
+laravel: ./workbench
+
+workbench:
+  start: '/'
+  install: true
+  health: false
+  discovers:
+    web: false
+    api: false
+    commands: false
+    components: false
+    views: true
+  build: []
+  assets: []
+  sync: []
