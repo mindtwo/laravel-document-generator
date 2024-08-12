@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Blade;
 
 class BladeBlock extends Block
 {
-
     public function __construct(
         protected ?string $name,
         protected ?string $template,
@@ -18,6 +17,63 @@ class BladeBlock extends Block
         $templatePath = str_replace('.', '/', str_replace('.blade.php', '', $this->template));
 
         return file_get_contents(resource_path('views/'.$templatePath.'.blade.php'));
+    }
+
+    /**
+     * Get array of all placeholder we need to resolve.
+     */
+    public function placeholder(): array
+    {
+        $placeholder = parent::placeholder();
+
+        $propAttributes = $this->propAttributes();
+
+        return array_merge($placeholder, array_keys($propAttributes));
+    }
+
+    /**
+     * Get prop attributes from template.
+     * Use the default @props directive from Laravel Blade.
+     */
+    protected function propAttributes(): array
+    {
+        $matches = [];
+
+        preg_match_all('/\B@(@?\w+(?:::\w+)?)([ \t]*)(\( (?<propArray> [\S\s]*? ) \))?/x', $this->template(), $matches);
+
+        if (empty($matches)) {
+            return [];
+        }
+
+        // Get the prop array string from the matches.
+        $propArrayStr = $matches['propArray'][0] ?? null;
+        if (! $propArrayStr) {
+            return [];
+        }
+
+        $propStrs = explode(',', str_replace(['[', ']'], ['', ''], $propArrayStr));
+
+        // Reduce the prop strings to an array of key-value pairs
+        return array_reduce($propStrs, function ($arr, $prop) {
+            // If the prop does not contain ' => ', it is a simple string
+            if (strpos($prop, '=>') === false) {
+                $key = trim($prop, '\'\n ');
+
+                $arr[$key] = null;
+
+                return $arr;
+            }
+
+            // Split by ' => ' to separate keys and values
+            [$key, $value] = explode('=>', $prop);
+
+            $key = trim($key, '\'\n ');
+            $value = trim($value, '\'n ');
+
+            $arr[$key] = $value;
+
+            return $arr;
+        }, []);
     }
 
     protected function placeholderRegex(?string $field = null): string
