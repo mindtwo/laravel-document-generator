@@ -129,7 +129,18 @@ trait ResolvesDocumentContent
         return $this->placeholderResolver;
     }
 
-    protected function isFaking(): bool
+    public function fake(bool $fake = true): static
+    {
+        if (! property_exists($this, 'fake')) {
+            return $this;
+        }
+
+        $this->fake = $fake;
+
+        return $this;
+    }
+
+    public function isFaking(): bool
     {
         if (! property_exists($this, 'fake')) {
             return false;

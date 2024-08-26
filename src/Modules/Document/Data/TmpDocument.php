@@ -28,6 +28,7 @@ class TmpDocument extends Data implements DocumentHolder
         private array $extra = [],
         protected array $blocks = [],
         protected ?Layout $layout = null,
+        private bool $fake = true,
     ) {
         $documentContent = new TmpDocumentContent(
             $model,
@@ -37,6 +38,8 @@ class TmpDocument extends Data implements DocumentHolder
             $documentClass,
             $layout,
         );
+
+        $documentContent->fake($this->fake);
 
         [$this->resolvedPlaceholder, $this->content] = $documentContent->html();
     }
