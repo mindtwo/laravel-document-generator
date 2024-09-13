@@ -53,11 +53,21 @@ class BladeBlock extends Block
 
         $propStrs = explode(',', str_replace(['[', ']'], ['', ''], $propArrayStr));
 
+        // Trim characters to remove from prop strings
+        $propTrim = " \n\r\t\v\0\'\"";
+
         // Reduce the prop strings to an array of key-value pairs
-        return array_reduce($propStrs, function ($arr, $prop) {
+        return array_reduce($propStrs, function ($arr, $prop) use ($propTrim) {
+            $prop = trim($prop, $propTrim);
+
+            // If the prop is empty, return the array
+            if (empty($prop)) {
+                return $arr;
+            }
+
             // If the prop does not contain ' => ', it is a simple string
             if (strpos($prop, '=>') === false) {
-                $key = trim($prop, '\'\n ');
+                $key = trim($prop, $propTrim);
 
                 $arr[$key] = null;
 
@@ -67,8 +77,8 @@ class BladeBlock extends Block
             // Split by ' => ' to separate keys and values
             [$key, $value] = explode('=>', $prop);
 
-            $key = trim($key, '\'\n ');
-            $value = trim($value, '\'n ');
+            $key = trim($key, $propTrim);
+            $value = trim($value, $propTrim);
 
             $arr[$key] = $value;
 
