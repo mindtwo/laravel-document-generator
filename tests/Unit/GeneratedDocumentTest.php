@@ -1,9 +1,9 @@
 <?php
 
-use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
+use mindtwo\DocumentGenerator\Modules\Document\Models\GeneratedDocument;
 
 it('generates uuid when created', function () {
     $document = GeneratedDocument::create([
@@ -75,6 +75,29 @@ it('downloads the document', function () {
 
     expect($response->headers->get('content-disposition'))->toContain('file.txt');
     // TODO better test download?
+});
+
+it('slugifies the downloads filename', function () {
+    Storage::fake('local');
+
+    Storage::disk('local')->put('path/to/file/äöü.txt', 'Some content');
+
+    $document = GeneratedDocument::create([
+        'documentable_type' => 'test',
+        'documentable_id' => 1,
+        'document_class' => 'test',
+        'content' => 'Some content',
+        'disk' => 'local',
+        'file_path' => '/path/to/file',
+        'file_name' => 'äöü.txt',
+    ]);
+
+    $fakeFile = $document->full_path;
+    expect(Storage::disk('local')->exists($fakeFile))->toBeTrue();
+
+    $response = $document->download();
+
+    expect($response->headers->get('content-disposition'))->toContain('aou.txt');
 });
 
 it('can`t downloads the document without content', function () {
