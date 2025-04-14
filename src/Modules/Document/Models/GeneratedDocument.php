@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use mindtwo\DocumentGenerator\Modules\Document\Contracts\DocumentHolder;
 use mindtwo\DocumentGenerator\Modules\Document\Document;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
@@ -174,8 +175,16 @@ class GeneratedDocument extends Model implements DocumentHolder
         }
 
         if ($this->is_saved_to_disk) {
-            return $this->diskInstance()->download($this->full_path, $this->file_name, [
-                'Content-Disposition' => ($inline ? 'inline' : 'attachment')."; filename={$this->file_name}",
+
+            // Get the file name as slug
+            $fileNameSlug = Str::of(pathinfo($this->file_name, PATHINFO_FILENAME))
+                ->slug()
+                ->append('.')
+                ->append(pathinfo($this->file_name, PATHINFO_EXTENSION))
+                ->toString();
+
+            return $this->diskInstance()->download($this->full_path, $fileNameSlug, [
+                'Content-Disposition' => ($inline ? 'inline' : 'attachment')."; filename={$fileNameSlug}",
             ]);
         }
 
