@@ -5,16 +5,15 @@ namespace mindtwo\DocumentGenerator\Providers;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
 use mindtwo\DocumentGenerator\Modules\Content\Listeners\DocumentGeneratedListener;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentGeneratedEvent;
+use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
 use mindtwo\DocumentGenerator\Modules\Generation\Listeners\DocumentShouldSaveListener;
 use mindtwo\DocumentGenerator\Modules\Placeholder\Services\PlaceholderResolver;
 use mindtwo\DocumentGenerator\Services\DocumentService;
 
 class DocumentGeneratorProvider extends ServiceProvider
 {
-
     protected $placeholder = [];
 
     /**
@@ -35,6 +34,7 @@ class DocumentGeneratorProvider extends ServiceProvider
 
             $this->commands([
                 \mindtwo\DocumentGenerator\Modules\Console\Commands\GenerateMissingDocumentsCommand::class,
+                \mindtwo\DocumentGenerator\Modules\Console\Commands\MinfyHtmlGeneratedContentColumn::class,
             ]);
         }
 
@@ -59,7 +59,7 @@ class DocumentGeneratorProvider extends ServiceProvider
         });
 
         $this->app->bind('document', function (Application $app) {
-            return new DocumentService();
+            return new DocumentService;
         });
     }
 }
