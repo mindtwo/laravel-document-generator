@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use mindtwo\DocumentGenerator\Modules\Document\Actions\MinifyHtmlContent;
 use mindtwo\DocumentGenerator\Modules\Document\Contracts\DocumentHolder;
 use mindtwo\DocumentGenerator\Modules\Document\Document;
 use mindtwo\DocumentGenerator\Modules\Document\Events\DocumentShouldSaveToDiskEvent;
@@ -83,6 +84,26 @@ class GeneratedDocument extends Model implements DocumentHolder
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * The content attribute with minification.
+     *
+     * @return Attribute<?string, ?string>
+     */
+    public function content(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ?? '',
+            set: function (?string $value): ?string {
+                return (new MinifyHtmlContent)($value);
+            }
+        );
+    }
+
+    /**
+     * Get the full path of the document file.
+     *
+     * @return Attribute<string|null>
+     */
     public function fullPath(): Attribute
     {
         return Attribute::make(function () {
@@ -94,6 +115,11 @@ class GeneratedDocument extends Model implements DocumentHolder
         });
     }
 
+    /**
+     * Check if the document has a valid document class.
+     *
+     * @return Attribute<bool>
+     */
     public function hasDocumentClass(): Attribute
     {
         return Attribute::make(function () {
@@ -101,6 +127,11 @@ class GeneratedDocument extends Model implements DocumentHolder
         });
     }
 
+    /**
+     * Check if the document has content.
+     *
+     * @return Attribute<bool>
+     */
     public function hasContent(): Attribute
     {
         return Attribute::make(function () {
