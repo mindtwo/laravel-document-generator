@@ -170,6 +170,7 @@ abstract class Document
             return $this->generatedDocument;
         }
 
+        // FIXME: not relyable when multiple documents are existing
         return GeneratedDocument::firstOrCreate([
             'documentable_id' => $this->model->id,
             'documentable_type' => $this->model->getMorphClass(),
