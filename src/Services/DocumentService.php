@@ -82,8 +82,13 @@ class DocumentService
     public function recreateGeneratedDocument(GeneratedDocument $generatedDocument): self
     {
         $this->generatedDocument = $generatedDocument;
+        $document = $generatedDocument->instance;
 
-        return $this->recreateForModel($generatedDocument->model, $generatedDocument->document_class);
+        // silently generate the document
+        $this->generateSilently($document, $generatedDocument->model);
+        $this->saveToDisk(null, true);
+
+        return $this;
     }
 
     /**
